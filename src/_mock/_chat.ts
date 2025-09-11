@@ -1,0 +1,406 @@
+import type { IChatMessage, IChatParticipant, IChatConversation } from 'src/types/chat';
+
+import { _mock } from './_mock';
+
+// ----------------------------------------------------------------------
+
+export const CHAT_PARTICIPANTS: IChatParticipant[] = [
+  {
+    id: 'user-001',
+    name: 'João Silva',
+    role: 'Cliente',
+    email: 'joao.silva@email.com',
+    address: 'São Paulo, SP',
+    avatarUrl: _mock.image.avatar(1),
+    phoneNumber: '+55 11 99999-1234',
+    lastActivity: '2024-01-15T10:30:00',
+    status: 'online',
+  },
+  {
+    id: 'user-002',
+    name: 'Maria Santos',
+    role: 'Corretora',
+    email: 'maria.santos@imobiliaria.com',
+    address: 'Rio de Janeiro, RJ',
+    avatarUrl: _mock.image.avatar(2),
+    phoneNumber: '+55 21 98888-5678',
+    lastActivity: '2024-01-15T11:15:00',
+    status: 'online',
+  },
+  {
+    id: 'user-003',
+    name: 'Carlos Oliveira',
+    role: 'Gerente de Vendas',
+    email: 'carlos.oliveira@imobiliaria.com',
+    address: 'Belo Horizonte, MG',
+    avatarUrl: _mock.image.avatar(3),
+    phoneNumber: '+55 31 97777-9012',
+    lastActivity: '2024-01-15T09:45:00',
+    status: 'dot',
+  },
+  {
+    id: 'user-004',
+    name: 'Ana Costa',
+    role: 'Cliente',
+    email: 'ana.costa@email.com',
+    address: 'Porto Alegre, RS',
+    avatarUrl: _mock.image.avatar(4),
+    phoneNumber: '+55 51 96666-3456',
+    lastActivity: '2024-01-15T08:20:00',
+    status: 'standard',
+  },
+  {
+    id: 'user-005',
+    name: 'Pedro Ferreira',
+    role: 'Consultor Imobiliário',
+    email: 'pedro.ferreira@imobiliaria.com',
+    address: 'Salvador, BA',
+    avatarUrl: _mock.image.avatar(5),
+    phoneNumber: '+55 71 95555-7890',
+    lastActivity: '2024-01-15T12:00:00',
+    status: 'online',
+  },
+];
+
+// ----------------------------------------------------------------------
+
+export const CHAT_MESSAGES: IChatMessage[] = [
+  {
+    id: 'msg-001',
+    body: 'Olá! Gostaria de agendar uma visita ao apartamento.',
+    senderId: 'user-001',
+    contentType: 'text',
+    createdAt: '2024-01-15T09:00:00',
+    attachments: [],
+  },
+  {
+    id: 'msg-002',
+    body: 'Claro! Temos disponibilidade para hoje à tarde. Que horário seria melhor para você?',
+    senderId: 'user-002',
+    contentType: 'text',
+    createdAt: '2024-01-15T09:05:00',
+    attachments: [],
+  },
+  {
+    id: 'msg-003',
+    body: 'Perfeito! 15h seria ideal. Qual o endereço exato?',
+    senderId: 'user-001',
+    contentType: 'text',
+    createdAt: '2024-01-15T09:10:00',
+    attachments: [],
+  },
+  {
+    id: 'msg-004',
+    body: 'Rua das Flores, 123 - Apartamento 45. Vou enviar a localização.',
+    senderId: 'user-002',
+    contentType: 'text',
+    createdAt: '2024-01-15T09:12:00',
+    attachments: [],
+  },
+  {
+    id: 'msg-005',
+    body: 'Ótimo! Estarei lá pontualmente às 15h. Obrigado!',
+    senderId: 'user-001',
+    contentType: 'text',
+    createdAt: '2024-01-15T09:15:00',
+    attachments: [],
+  },
+  {
+    id: 'msg-006',
+    body: 'Olá Maria, como foi a visita com o cliente?',
+    senderId: 'user-003',
+    contentType: 'text',
+    createdAt: '2024-01-15T16:30:00',
+    attachments: [],
+  },
+  {
+    id: 'msg-007',
+    body: 'Foi excelente! O cliente demonstrou muito interesse. Ele quer fazer uma proposta.',
+    senderId: 'user-002',
+    contentType: 'text',
+    createdAt: '2024-01-15T16:35:00',
+    attachments: [],
+  },
+  {
+    id: 'msg-008',
+    body: 'Que ótima notícia! Qual valor ele está pensando em oferecer?',
+    senderId: 'user-003',
+    contentType: 'text',
+    createdAt: '2024-01-15T16:40:00',
+    attachments: [],
+  },
+  {
+    id: 'msg-009',
+    body: 'Ele mencionou R$ 450.000. Vou preparar a documentação.',
+    senderId: 'user-002',
+    contentType: 'text',
+    createdAt: '2024-01-15T16:45:00',
+    attachments: [],
+  },
+  {
+    id: 'msg-010',
+    body: 'Perfeito! Vamos agendar uma reunião para amanhã para finalizar os detalhes.',
+    senderId: 'user-003',
+    contentType: 'text',
+    createdAt: '2024-01-15T16:50:00',
+    attachments: [],
+  },
+];
+
+// ----------------------------------------------------------------------
+
+// Função para criar uma conversa específica para uma venda
+export function createVendaConversation(
+  vendaId: string,
+  userName?: string,
+  clientData?: { name?: string; email?: string; phone?: string },
+  currentUserId?: string
+): IChatConversation {
+  const iaAssistente: IChatParticipant = {
+    id: 'ia-assistente-001',
+    name: 'DUP',
+    role: 'IA Assistente',
+    email: 'ia@imobiliaria.com',
+    address: 'Sistema Virtual',
+    avatarUrl: _mock.image.avatar(6),
+    phoneNumber: '',
+    lastActivity: new Date().toISOString(),
+    status: 'online',
+  };
+
+  const corretor: IChatParticipant = {
+    id: currentUserId || 'corretor-001',
+    name: userName || 'Corretor',
+    role: 'Corretor',
+    email: 'corretor@imobiliaria.com',
+    address: 'São Paulo, SP',
+    avatarUrl: _mock.image.avatar(7),
+    phoneNumber: '+55 11 99999-0000',
+    lastActivity: new Date().toISOString(),
+    status: 'online',
+  };
+
+  const cliente: IChatParticipant = {
+    id: 'cliente-001',
+    name: clientData?.name || 'Cliente',
+    role: 'Cliente',
+    email: clientData?.email || 'cliente@email.com',
+    address: 'Endereço do cliente',
+    avatarUrl: _mock.image.avatar(8),
+    phoneNumber: clientData?.phone || '+55 11 88888-8888',
+    lastActivity: new Date().toISOString(),
+    status: 'standard',
+  };
+
+  const welcomeMessages: IChatMessage[] = [
+    {
+      id: `msg-${vendaId}-001`,
+      body: 'Olá! Percebi que você está registrando uma nova venda. Confirma que a venda é para o cliente Jayvion Simon e o imóvel selecionado é a Cobertura Sunset - Apartamento 304?',
+      senderId: 'ia-assistente-001',
+      contentType: 'text',
+      createdAt: new Date().toISOString(),
+      attachments: [],
+    },
+    {
+      id: `msg-${vendaId}-002`,
+      body: 'Isso mesmo! Vamos finalizar o processo.',
+      senderId: currentUserId || 'corretor-001',
+      contentType: 'text',
+      createdAt: new Date().toISOString(),
+      attachments: [],
+    },
+    {
+      id: `msg-${vendaId}-003`,
+      body: 'Perfeito. Para agilizar, me diga os detalhes finais da negociação. Qual o valor total da venda que foi acordado?',
+      senderId: 'ia-assistente-001',
+      contentType: 'text',
+      createdAt: new Date().toISOString(),
+      attachments: [],
+    },
+    {
+      id: `msg-${vendaId}-004`,
+      body: 'O valor final é de R$ 980.000.',
+      senderId: currentUserId || 'corretor-001',
+      contentType: 'text',
+      createdAt: new Date().toISOString(),
+      attachments: [],
+    },
+    {
+      id: `msg-${vendaId}-005`,
+      body: 'Ok, valor registrado: R$ 980.000. E como será a forma de pagamento? É à vista, por financiamento bancário, ou em parcelas diretas?',
+      senderId: 'ia-assistente-001',
+      contentType: 'text',
+      createdAt: new Date().toISOString(),
+      attachments: [],
+    },
+    {
+      id: `msg-${vendaId}-006`,
+      body: 'Será um financiamento bancário.',
+      senderId: currentUserId || 'corretor-001',
+      contentType: 'text',
+      createdAt: new Date().toISOString(),
+      attachments: [],
+    },
+    {
+      id: `msg-${vendaId}-007`,
+      body: 'Ótimo. Para dar andamento, o sistema nos avisa que, para financiamento bancário, precisamos dos seguintes documentos:\n\nCópia do RG e CPF do comprador\nComprovante de renda\nCertidão de estado civil\n\nPor favor, faça o upload desses documentos ou confirme que já estão na pasta do cliente.',
+      senderId: 'ia-assistente-001',
+      contentType: 'text',
+      createdAt: new Date().toISOString(),
+      attachments: [],
+    },
+    {
+      id: `msg-${vendaId}-008`,
+      body: 'Eu já fiz o upload agora mesmo.',
+      senderId: currentUserId || 'corretor-001',
+      contentType: 'text',
+      createdAt: new Date().toISOString(),
+      attachments: [],
+    },
+    {
+      id: `msg-${vendaId}-009`,
+      body: 'Certo. Verificando os arquivos... Documentos recebidos e validados. Com todas as informações que você e a base de dados forneceram, acabei de gerar um rascunho do contrato de compra e venda.',
+      senderId: 'ia-assistente-001',
+      contentType: 'text',
+      createdAt: new Date().toISOString(),
+      attachments: [],
+    },
+    {
+      id: `msg-${vendaId}-010`,
+      body: 'Você pode visualizá-lo e me avisar se há algum ajuste a ser feito, ou posso enviá-lo diretamente para a assinatura digital do cliente. O que você prefere?',
+      senderId: 'ia-assistente-001',
+      contentType: 'text',
+      createdAt: new Date().toISOString(),
+      attachments: [],
+    },
+    {
+      id: `msg-${vendaId}-011`,
+      body: 'Pode enviar para a assinatura. O cliente está pronto para assinar.',
+      senderId: currentUserId || 'corretor-001',
+      contentType: 'text',
+      createdAt: new Date().toISOString(),
+      attachments: [],
+    },
+    {
+      id: `msg-${vendaId}-012`,
+      body: 'Entendido! Contrato enviado para Jayvion Simon por e-mail para assinatura eletrônica. Também já registrei a venda em seu CRM e notifiquei o departamento jurídico e financeiro para que eles possam acompanhar o processo.',
+      senderId: 'ia-assistente-001',
+      contentType: 'text',
+      createdAt: new Date().toISOString(),
+      attachments: [],
+    },
+    {
+      id: `msg-${vendaId}-013`,
+      body: 'Mais alguma coisa que posso ajudar?',
+      senderId: 'ia-assistente-001',
+      contentType: 'text',
+      createdAt: new Date().toISOString(),
+      attachments: [],
+    },
+    {
+      id: `msg-${vendaId}-014`,
+      body: 'Não, por enquanto é só isso. Obrigado!',
+      senderId: currentUserId || 'corretor-001',
+      contentType: 'text',
+      createdAt: new Date().toISOString(),
+      attachments: [],
+    },
+    {
+      id: `msg-${vendaId}-015`,
+      body: 'De nada! Fico à disposição. Venda finalizada com sucesso. Tenha um ótimo dia!',
+      senderId: 'ia-assistente-001',
+      contentType: 'text',
+      createdAt: new Date().toISOString(),
+      attachments: [],
+    },
+  ];
+
+  return {
+    id: `venda-${vendaId}`,
+    type: 'GROUP',
+    unreadCount: 0,
+    messages: welcomeMessages,
+    participants: [corretor, iaAssistente, cliente],
+  };
+}
+
+export const CHAT_CONVERSATIONS: IChatConversation[] = [
+  {
+    id: 'conversation-001',
+    type: 'ONE_TO_ONE',
+    unreadCount: 0,
+    messages: CHAT_MESSAGES.slice(0, 5),
+    participants: [CHAT_PARTICIPANTS[0], CHAT_PARTICIPANTS[1]],
+  },
+  {
+    id: 'conversation-002',
+    type: 'ONE_TO_ONE',
+    unreadCount: 2,
+    messages: CHAT_MESSAGES.slice(5, 10),
+    participants: [CHAT_PARTICIPANTS[1], CHAT_PARTICIPANTS[2]],
+  },
+  {
+    id: 'conversation-003',
+    type: 'GROUP',
+    unreadCount: 1,
+    messages: [
+      {
+        id: 'msg-011',
+        body: 'Pessoal, temos uma nova oportunidade de venda!',
+        senderId: 'user-005',
+        contentType: 'text',
+        createdAt: '2024-01-15T14:00:00',
+        attachments: [],
+      },
+      {
+        id: 'msg-012',
+        body: 'Ótimo! Qual é o imóvel?',
+        senderId: 'user-002',
+        contentType: 'text',
+        createdAt: '2024-01-15T14:05:00',
+        attachments: [],
+      },
+      {
+        id: 'msg-013',
+        body: 'É um apartamento de 3 quartos na Zona Sul. Cliente muito interessado.',
+        senderId: 'user-005',
+        contentType: 'text',
+        createdAt: '2024-01-15T14:10:00',
+        attachments: [],
+      },
+    ],
+    participants: [CHAT_PARTICIPANTS[1], CHAT_PARTICIPANTS[2], CHAT_PARTICIPANTS[4]],
+  },
+  {
+    id: 'conversation-004',
+    type: 'ONE_TO_ONE',
+    unreadCount: 0,
+    messages: [
+      {
+        id: 'msg-014',
+        body: 'Oi Ana! Vi que você está interessada no nosso lançamento.',
+        senderId: 'user-005',
+        contentType: 'text',
+        createdAt: '2024-01-15T11:00:00',
+        attachments: [],
+      },
+      {
+        id: 'msg-015',
+        body: 'Sim! Gostaria de mais informações sobre as plantas e preços.',
+        senderId: 'user-004',
+        contentType: 'text',
+        createdAt: '2024-01-15T11:15:00',
+        attachments: [],
+      },
+      {
+        id: 'msg-016',
+        body: 'Claro! Vou enviar o material completo por email. Quando podemos agendar uma visita?',
+        senderId: 'user-005',
+        contentType: 'text',
+        createdAt: '2024-01-15T11:20:00',
+        attachments: [],
+      },
+    ],
+    participants: [CHAT_PARTICIPANTS[3], CHAT_PARTICIPANTS[4]],
+  },
+];

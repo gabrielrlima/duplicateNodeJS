@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Debug Frontend - Terrenos</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .section { margin: 20px 0; padding: 15px; border: 1px solid #ccc; }
+        .success { color: green; }
+        .error { color: red; }
+        .info { color: blue; }
+        pre { background: #f5f5f5; padding: 10px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>Debug Frontend - Terrenos</h1>
+    
+    <div class="section">
+        <h2>1. LocalStorage</h2>
+        <div id="localStorage-info"></div>
+    </div>
+    
+    <div class="section">
+        <h2>2. Teste de API</h2>
+        <button onclick="testAPI()">Testar API de Terrenos</button>
+        <div id="api-result"></div>
+    </div>
+    
+    <div class="section">
+        <h2>3. Instruções</h2>
+        <p>1. Abra o console do navegador (F12)</p>
+        <p>2. Navegue para a página de terrenos: <a href="http://localhost:8080/dashboard/terrenos/todos-os-terrenos" target="_blank">http://localhost:8080/dashboard/terrenos/todos-os-terrenos</a></p>
+        <p>3. No console, digite: <code>localStorage.getItem('currentRealEstate')</code></p>
+        <p>4. Verifique se a imobiliária "Adão imóveis" está selecionada</p>
+        <p>5. Se não estiver, selecione-a no header da aplicação</p>
+    </div>
+
+    <script>
+        // Verificar localStorage
+        function checkLocalStorage() {
+            const currentRealEstate = localStorage.getItem('currentRealEstate');
+            const localStorageDiv = document.getElementById('localStorage-info');
+            
+            if (currentRealEstate) {
+                try {
+                    const parsed = JSON.parse(currentRealEstate);
+                    localStorageDiv.innerHTML = `
+                        <div class="success">✅ Imobiliária encontrada no localStorage:</div>
+                        <pre>${JSON.stringify(parsed, null, 2)}</pre>
+                    `;
+                } catch (e) {
+                    localStorageDiv.innerHTML = `
+                        <div class="error">❌ Erro ao parsear localStorage:</div>
+                        <pre>${currentRealEstate}</pre>
+                    `;
+                }
+            } else {
+                localStorageDiv.innerHTML = `
+                    <div class="error">❌ Nenhuma imobiliária encontrada no localStorage</div>
+                    <p class="info">Isso pode explicar por que os terrenos não aparecem.</p>
+                `;
+            }
+        }
+        
+        // Testar API
+        async function testAPI() {
+            const resultDiv = document.getElementById('api-result');
+            resultDiv.innerHTML = '<div class="info">🔄 Testando API...</div>';
+            
+            try {
+                // Verificar se há token no localStorage
+                const token = localStorage.getItem('accessToken');
+                if (!token) {
+                    resultDiv.innerHTML = '<div class="error">❌ Token não encontrado. Faça login primeiro.</div>';
+                    return;
+                }
+                
+                // Verificar imobiliária atual
+                const currentRealEstate = localStorage.getItem('currentRealEstate');
+                if (!currentRealEstate) {
+                    resultDiv.innerHTML = '<div class="error">❌ Nenhuma imobiliária selecionada.</div>';
+                    return;
+                }
+                
+                const realEstate = JSON.parse(currentRealEstate);
+                
+                // Testar API de terrenos
+                const response = await fetch(`http://localhost:3001/api/terreno/list?real_estate_id=${realEstate.id}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok && data.success) {
+                    resultDiv.innerHTML = `
+                        <div class="success">✅ API funcionando!</div>
+                        <p>Terrenos encontrados: ${data.data.terrenos.length}</p>
+                        <pre>${JSON.stringify(data.data.terrenos.slice(0, 2), null, 2)}</pre>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `
+                        <div class="error">❌ Erro na API:</div>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    `;
+                }
+                
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="error">❌ Erro:</div>
+                    <pre>${error.message}</pre>
+                `;
+            }
+        }
+        
+        // Executar verificações ao carregar
+        window.onload = function() {
+            checkLocalStorage();
+        };
+    </script>
+</body>
+</html>

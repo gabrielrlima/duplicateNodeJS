@@ -1,0 +1,1 @@
+import{j as e,H as r}from"./index-cNRh_qft.js";import{R as t}from"./relatorios-list-view-MDQx5B_C.js";import"./dashboard-stats-card-eNVG4-Fk.js";import"./Card-C_-31fGp.js";import"./Grid-BAAHJ7js.js";function n(){return e.jsxs(e.Fragment,{children:[e.jsx(r,{children:e.jsx("title",{children:"Dashboard: Relatório de Vendas"})}),e.jsx(t,{})]})}export{n as default};

@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste do Formulário de Terreno</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .test-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .test-section h3 {
+            color: #333;
+            margin-top: 0;
+        }
+        .button {
+            background: #1976d2;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+            font-size: 14px;
+        }
+        .button:hover {
+            background: #1565c0;
+        }
+        .button.success {
+            background: #4caf50;
+        }
+        .button.danger {
+            background: #f44336;
+        }
+        .log {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            padding: 15px;
+            margin: 10px 0;
+            font-family: monospace;
+            font-size: 12px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .status.info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Teste do Formulário de Terreno</h1>
+        <p>Esta página permite testar o formulário de criação de terreno de forma automatizada.</p>
+        
+        <div class="test-section">
+            <h3>📋 Instruções</h3>
+            <ol>
+                <li>Certifique-se de que o servidor está rodando em <code>http://localhost:8080</code></li>
+                <li>Abra o formulário em uma nova aba: <a href="http://localhost:8080/dashboard/terrenos/new" target="_blank">Formulário de Terreno</a></li>
+                <li>Volte para esta página e execute os testes abaixo</li>
+                <li>Observe os logs e resultados</li>
+            </ol>
+        </div>
+        
+        <div class="test-section">
+            <h3>🎯 Testes Automatizados</h3>
+            <button class="button" onclick="testFormAccess()">1. Testar Acesso ao Formulário</button>
+            <button class="button" onclick="testFormFields()">2. Testar Preenchimento de Campos</button>
+            <button class="button" onclick="testFormSubmission()">3. Testar Submissão</button>
+            <button class="button success" onclick="runAllTests()">🚀 Executar Todos os Testes</button>
+            <button class="button danger" onclick="clearLogs()">🗑️ Limpar Logs</button>
+        </div>
+        
+        <div class="test-section">
+            <h3>📊 Status dos Testes</h3>
+            <div id="test-status"></div>
+        </div>
+        
+        <div class="test-section">
+            <h3>📝 Logs de Teste</h3>
+            <div id="test-logs" class="log"></div>
+        </div>
+        
+        <div class="test-section">
+            <h3>🔧 Dados de Teste</h3>
+            <pre id="test-data">{
+  "titulo": "Terreno de Teste Automatizado",
+  "preco": "150000",
+  "area": "500",
+  "proprietario": {
+    "nome": "João Silva Teste",
+    "email": "joao.teste@email.com",
+    "telefone": "11999887766",
+    "documento": "12345678901"
+  },
+  "descricao": "Terreno criado através de teste automatizado"
+}</pre>
+        </div>
+    </div>
+    
+    <script>
+        let testWindow = null;
+        
+        function log(message, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString();
+            const logElement = document.getElementById('test-logs');
+            const logEntry = `[${timestamp}] ${message}\n`;
+            logElement.textContent += logEntry;
+            logElement.scrollTop = logElement.scrollHeight;
+            console.log(message);
+        }
+        
+        function updateStatus(message, type = 'info') {
+            const statusElement = document.getElementById('test-status');
+            statusElement.innerHTML = `<div class="status ${type}">${message}</div>`;
+        }
+        
+        function clearLogs() {
+            document.getElementById('test-logs').textContent = '';
+            document.getElementById('test-status').innerHTML = '';
+            log('🗑️ Logs limpos');
+        }
+        
+        async function testFormAccess() {
+            log('🔍 Testando acesso ao formulário...');
+            updateStatus('Testando acesso ao formulário...', 'info');
+            
+            try {
+                const response = await fetch('http://localhost:8080/dashboard/terrenos/new');
+                if (response.ok) {
+                    log('✅ Formulário acessível');
+                    updateStatus('✅ Formulário acessível', 'success');
+                    return true;
+                } else {
+                    log(`❌ Erro ao acessar formulário: ${response.status}`);
+                    updateStatus(`❌ Erro ao acessar formulário: ${response.status}`, 'error');
+                    return false;
+                }
+            } catch (error) {
+                log(`❌ Erro de conexão: ${error.message}`);
+                updateStatus(`❌ Erro de conexão: ${error.message}`, 'error');
+                return false;
+            }
+        }
+        
+        function testFormFields() {
+            log('📝 Abrindo formulário para teste de campos...');
+            updateStatus('Abrindo formulário para teste...', 'info');
+            
+            if (testWindow && !testWindow.closed) {
+                testWindow.focus();
+            } else {
+                testWindow = window.open('http://localhost:8080/dashboard/terrenos/new', 'terreno-form', 'width=1200,height=800');
+            }
+            
+            setTimeout(() => {
+                if (testWindow && !testWindow.closed) {
+                    try {
+                        // Injetar script de teste na janela do formulário
+                        const script = `
+                            console.log('🧪 Iniciando teste de preenchimento...');
+                            
+                            function fillField(selector, value) {
+                                const field = document.querySelector(selector);
+                                if (field) {
+                                    field.focus();
+                                    field.value = value;
+                                    field.dispatchEvent(new Event('input', { bubbles: true }));
+                                    field.dispatchEvent(new Event('change', { bubbles: true }));
+                                    field.blur();
+                                    console.log('✅ Campo preenchido:', selector, '=', value);
+                                    return true;
+                                } else {
+                                    console.error('❌ Campo não encontrado:', selector);
+                                    return false;
+                                }
+                            }
+                            
+                            // Preencher campos obrigatórios
+                            setTimeout(() => {
+                                fillField('input[name="titulo"]', 'Terreno de Teste Automatizado');
+                                fillField('input[name="preco"]', '150000');
+                                fillField('input[name="area"]', '500');
+                                fillField('input[name="proprietario.nome"]', 'João Silva Teste');
+                                fillField('input[name="proprietario.email"]', 'joao.teste@email.com');
+                                fillField('input[name="proprietario.telefone"]', '11999887766');
+                                fillField('input[name="proprietario.documento"]', '12345678901');
+                                fillField('textarea[name="descricao"]', 'Terreno criado através de teste automatizado');
+                                
+                                console.log('✅ Todos os campos foram preenchidos!');
+                                
+                                // Destacar botão de submissão
+                                const submitButton = document.querySelector('button[type="submit"]');
+                                if (submitButton) {
+                                    submitButton.style.border = '3px solid #ff0000';
+                                    submitButton.style.animation = 'pulse 1s infinite';
+                                    console.log('🔴 Botão de submissão destacado!');
+                                }
+                            }, 2000);
+                        `;
+                        
+                        testWindow.eval(script);
+                        log('✅ Script de preenchimento injetado');
+                        updateStatus('✅ Campos sendo preenchidos automaticamente', 'success');
+                    } catch (error) {
+                        log(`❌ Erro ao injetar script: ${error.message}`);
+                        updateStatus(`❌ Erro ao injetar script: ${error.message}`, 'error');
+                    }
+                } else {
+                    log('❌ Janela do formulário não está disponível');
+                    updateStatus('❌ Janela do formulário não está disponível', 'error');
+                }
+            }, 3000);
+        }
+        
+        function testFormSubmission() {
+            log('🚀 Testando submissão do formulário...');
+            updateStatus('Testando submissão...', 'info');
+            
+            if (testWindow && !testWindow.closed) {
+                try {
+                    const script = `
+                        console.log('🚀 Testando submissão...');
+                        const submitButton = document.querySelector('button[type="submit"]');
+                        if (submitButton) {
+                            submitButton.click();
+                            console.log('✅ Botão de submissão clicado!');
+                        } else {
+                            console.error('❌ Botão de submissão não encontrado!');
+                        }
+                    `;
+                    
+                    testWindow.eval(script);
+                    log('✅ Comando de submissão enviado');
+                    updateStatus('✅ Submissão testada - verifique os logs do console', 'success');
+                    
+                    // Monitorar por redirecionamento
+                    setTimeout(() => {
+                        if (testWindow && !testWindow.closed) {
+                            const currentUrl = testWindow.location.href;
+                            if (currentUrl.includes('/dashboard/terrenos') && !currentUrl.includes('/new')) {
+                                log('✅ Redirecionamento detectado para lista de terrenos');
+                                updateStatus('✅ Teste concluído com sucesso!', 'success');
+                            } else {
+                                log('⚠️ Ainda na página do formulário - verifique erros');
+                                updateStatus('⚠️ Verifique se houve erros na submissão', 'error');
+                            }
+                        }
+                    }, 5000);
+                } catch (error) {
+                    log(`❌ Erro ao testar submissão: ${error.message}`);
+                    updateStatus(`❌ Erro ao testar submissão: ${error.message}`, 'error');
+                }
+            } else {
+                log('❌ Janela do formulário não está disponível');
+                updateStatus('❌ Abra o formulário primeiro', 'error');
+            }
+        }
+        
+        async function runAllTests() {
+            log('🚀 Executando todos os testes...');
+            updateStatus('Executando bateria completa de testes...', 'info');
+            
+            const accessOk = await testFormAccess();
+            if (accessOk) {
+                setTimeout(() => {
+                    testFormFields();
+                    setTimeout(() => {
+                        testFormSubmission();
+                    }, 8000);
+                }, 2000);
+            }
+        }
+        
+        // Inicializar
+        log('🧪 Sistema de teste carregado');
+        updateStatus('Sistema pronto para testes', 'info');
+    </script>
+</body>
+</html>
