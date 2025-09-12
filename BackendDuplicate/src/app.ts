@@ -23,67 +23,48 @@ const app = express();
 // Trust proxy (importante para deployment)
 app.set('trust proxy', 1);
 
-// Middlewares de segurança
-app.use(helmetMiddleware);
-app.use(corsMiddleware);
+// ===== MIDDLEWARES ESSENCIAIS =====
+// 1. Middleware de debug simples
+app.use((req, res, next) => {
+  console.log(`[DEBUG] ${req.method} ${req.url}`);
+  next();
+});
 
-// Rate limiting (aplicado globalmente)
-if (config.nodeEnv === 'production') {
-  app.use(rateLimitMiddleware);
-}
-
-// Middleware de parsing
+// 2. Middleware de parsing (CRÍTICO para POST)
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
-// Middleware de logging
-if (config.nodeEnv === 'development') {
-  app.use(morgan('dev'));
-} else {
-  app.use(morgan('combined', { stream: morganStream }));
-}
-
-// Middleware customizado de logging
-app.use(requestLogger);
-
-// Middleware de sanitização
-app.use(sanitizeInput);
-
-// Middleware para adicionar headers de resposta padrão
+// 3. Headers padrão
 app.use((req, res, next) => {
   res.setHeader('X-API-Version', '1.0.0');
   res.setHeader('X-Powered-By', 'Node.js/Express');
   next();
 });
 
+// ===== ROTAS DIRETAS (ANTES DAS ROTAS DA API) =====
 // Rota raiz
 app.get('/', (req, res) => {
-  res.json({
-    success: true,
-    message: 'Backend Duplicate API está funcionando!',
-    data: {
-      version: '1.0.0',
-      environment: config.nodeEnv,
-      timestamp: new Date().toISOString(),
-      endpoints: {
-        api: '/api',
-        health: '/api/health',
-        auth: '/api/auth',
-        users: '/api/users',
-        docs: '/api/docs (em desenvolvimento)',
-      },
-      documentation: {
-        postman: 'Collection disponível em breve',
-        swagger: 'Documentação Swagger em desenvolvimento',
-      },
-    },
-    timestamp: new Date().toISOString(),
-  });
+  console.log('Rota raiz acessada!');
+  res.json({ message: 'Servidor funcionando!' });
 });
 
-// Rotas da API
+// Rota de teste GET
+app.get('/ping', (req, res) => {
+  console.log('=== PING GET ===');
+  res.json({ success: true, message: 'pong-get' });
+});
+
+// Rota de teste POST
+app.post('/ping', (req, res) => {
+  console.log('=== PING POST ===');
+  console.log('Body:', req.body);
+  res.json({ success: true, message: 'pong-post', body: req.body });
+});
+
+// ===== ROTAS DA API (USANDO O SISTEMA DE ROTAS EXISTENTE) =====
 app.use('/api', routes);
 
+// ===== MIDDLEWARES DE ERRO (SEMPRE NO FINAL) =====
 // Middleware para rotas não encontradas
 app.use(notFoundHandler);
 

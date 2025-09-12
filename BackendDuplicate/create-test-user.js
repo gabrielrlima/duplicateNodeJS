@@ -2,17 +2,21 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 
 // Conectar ao MongoDB
-mongoose.connect('mongodb://localhost:27017/duplicatespa');
+mongoose.connect('mongodb://localhost:27017/backendduplicate');
 
-// Schema do User
+// Schema do User (compatível com o backend)
 const userSchema = new mongoose.Schema({
-  name: { type: String, required: true },
+  firstName: { type: String, required: true },
+  lastName: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
-  role: { type: String, enum: ['admin', 'user'], default: 'user' },
+  phone: String,
+  businessId: String,
   isActive: { type: Boolean, default: true },
-  createdAt: { type: Date, default: Date.now },
-  updatedAt: { type: Date, default: Date.now }
+  emailVerified: { type: Boolean, default: false },
+  phoneVerified: { type: Boolean, default: false }
+}, {
+  timestamps: true
 });
 
 const UserModel = mongoose.model('User', userSchema);
@@ -73,12 +77,14 @@ async function createTestData() {
     console.log('Dados existentes removidos.');
     
     // Criar usuário
-    const hashedPassword = await bcrypt.hash('123456', 10);
+    const hashedPassword = await bcrypt.hash('123456', 12);
     const user = await UserModel.create({
-      name: 'Usuário Teste',
+      firstName: 'Usuário',
+      lastName: 'Teste',
       email: 'teste@example.com',
       password: hashedPassword,
-      role: 'user'
+      phone: '+55 11 99999-9999',
+      businessId: 'test-business'
     });
     console.log('Usuário criado:', user._id.toString());
     

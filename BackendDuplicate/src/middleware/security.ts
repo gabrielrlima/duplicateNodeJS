@@ -42,32 +42,11 @@ export const helmetMiddleware = helmet({
   crossOriginEmbedderPolicy: false,
 });
 
-// Rate limiting
-export const rateLimitMiddleware = rateLimit({
-  windowMs: config.rateLimit.windowMs,
-  max: config.rateLimit.maxRequests,
-  message: {
-    success: false,
-    message: 'Muitas requisições. Tente novamente mais tarde.',
-    error: 'RATE_LIMIT_EXCEEDED',
-  },
-  standardHeaders: true,
-  legacyHeaders: false,
-  handler: (req: Request, res: Response) => {
-    logger.warn(`Rate limit exceeded for IP: ${req.ip}`, {
-      ip: req.ip,
-      userAgent: req.get('User-Agent'),
-      path: req.path,
-    });
-    
-    res.status(429).json({
-      success: false,
-      message: 'Muitas requisições. Tente novamente mais tarde.',
-      error: 'RATE_LIMIT_EXCEEDED',
-      timestamp: new Date().toISOString(),
-    });
-  },
-});
+// Rate limiting - DESABILITADO TEMPORARIAMENTE PARA DEBUG
+export const rateLimitMiddleware = (req: Request, res: Response, next: NextFunction) => {
+  logger.info('Rate limit middleware bypassed for debug');
+  next();
+};
 
 // Middleware para log de requisições
 export const requestLogger = (req: Request, res: Response, next: NextFunction) => {
@@ -88,29 +67,8 @@ export const requestLogger = (req: Request, res: Response, next: NextFunction) =
   next();
 };
 
-// Middleware para sanitização de dados
+// Middleware para sanitização de dados - SIMPLIFICADO PARA DEBUG
 export const sanitizeInput = (req: Request, res: Response, next: NextFunction) => {
-  // Remove propriedades potencialmente perigosas
-  const sanitize = (obj: any): any => {
-    if (typeof obj !== 'object' || obj === null) return obj;
-    
-    const sanitized = { ...obj };
-    delete sanitized.__proto__;
-    delete sanitized.constructor;
-    delete sanitized.prototype;
-    
-    for (const key in sanitized) {
-      if (typeof sanitized[key] === 'object') {
-        sanitized[key] = sanitize(sanitized[key]);
-      }
-    }
-    
-    return sanitized;
-  };
-  
-  if (req.body) req.body = sanitize(req.body);
-  // Não modificar req.query e req.params diretamente pois são readonly
-  // Em vez disso, criar novos objetos se necessário
-  
+  logger.info('Sanitize input middleware - bypassed for debug');
   next();
 };

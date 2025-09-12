@@ -70,10 +70,15 @@ export class AuthController {
    */
   async login(req: Request, res: Response): Promise<Response> {
     try {
+      logger.info('Requisição de login recebida:', { body: req.body });
+      
       // Validar dados de entrada
+      logger.info('Validando dados de entrada...');
       const validatedData = loginSchema.parse(req.body);
+      logger.info('Dados validados:', { email: validatedData.email });
 
       // Fazer login
+      logger.info('Chamando serviço de login...');
       const result = await authService.login(validatedData);
 
       const response: ApiResponse = {

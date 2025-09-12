@@ -117,23 +117,31 @@ export class AuthService {
    */
   async login(credentials: LoginInput): Promise<AuthResponse> {
     try {
+      logger.info('Iniciando processo de login para:', { email: credentials.email });
+      
       // Buscar usuário pelo email
+      logger.info('Buscando usuário no banco de dados...');
       const user = await UserModel.findOne({ 
         email: credentials.email.toLowerCase() 
       });
+      
+      logger.info('Usuário encontrado:', { user: user ? user.email : 'não encontrado' });
       
       if (!user) {
         throw new Error('Credenciais inválidas');
       }
 
       // Verificar senha
+      logger.info('Verificando senha...');
       const isPasswordValid = await user.comparePassword(credentials.password);
+      logger.info('Senha válida:', { isValid: isPasswordValid });
       
       if (!isPasswordValid) {
         throw new Error('Credenciais inválidas');
       }
 
       // Gerar tokens
+      logger.info('Gerando tokens...');
       const { token, refreshToken } = this.generateTokens(toUser(user));
       
       logger.info('Login realizado com sucesso:', {

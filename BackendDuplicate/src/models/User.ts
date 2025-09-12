@@ -1,4 +1,5 @@
 import mongoose, { Document, Schema } from 'mongoose';
+import bcrypt from 'bcryptjs';
 
 // Interface para o documento User no MongoDB
 export interface IUser extends Document {
@@ -269,7 +270,6 @@ userSchema.pre('save', async function(next) {
   if (!this.isModified('password')) return next();
   
   try {
-    const bcrypt = require('bcryptjs');
     const saltRounds = 12;
     this.password = await bcrypt.hash(this.password, saltRounds);
     next();
@@ -280,7 +280,6 @@ userSchema.pre('save', async function(next) {
 
 // Método para comparar senhas
 userSchema.methods.comparePassword = async function(candidatePassword: string): Promise<boolean> {
-  const bcrypt = require('bcryptjs');
   return bcrypt.compare(candidatePassword, this.password);
 };
 
