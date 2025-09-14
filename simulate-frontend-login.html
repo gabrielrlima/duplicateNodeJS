@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Simulate Frontend Login</title>
+    <script>
+        // Token obtido do backend
+        const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4YzQxZGI3MjMwNjU3NTA0ZjExYzZiNSIsImVtYWlsIjoiZ2FicmllbEB0ZXN0ZS5jb20iLCJmaXJzdE5hbWUiOiJHYWJyaWVsIiwibGFzdE5hbWUiOiJMaW1hIiwiaWF0IjoxNzU3NzkwODEzLCJleHAiOjE3NTgzOTU2MTN9.SRjI9nHicau9LsIHxFV3zFtjdVuCSKSHK7eJdjo9kkE';
+        
+        // Simular login salvando o token no sessionStorage
+        sessionStorage.setItem('sanctum_access_token', token);
+        
+        // Redirecionar para a página de edição do produto
+        const productId = '68c5b92e503ac0210d8da964';
+        const editUrl = `http://localhost:3000/dashboard/property/${productId}/edit`;
+        
+        console.log('Token salvo no sessionStorage:', token.substring(0, 20) + '...');
+        console.log('Redirecionando para:', editUrl);
+        
+        // Aguardar um pouco e redirecionar
+        setTimeout(() => {
+            window.location.href = editUrl;
+        }, 1000);
+    </script>
+</head>
+<body>
+    <h1>Simulando Login...</h1>
+    <p>Token sendo salvo no sessionStorage...</p>
+    <p>Redirecionando para página de edição em 1 segundo...</p>
+    
+    <div id="info">
+        <h3>Informações do Teste:</h3>
+        <p><strong>Produto ID:</strong> 68c5b92e503ac0210d8da964</p>
+        <p><strong>Nome:</strong> Casa de Praia Ilha Bela</p>
+        <p><strong>Tipo:</strong> imovel</p>
+        <p><strong>Quartos:</strong> 4</p>
+        <p><strong>Banheiros:</strong> 4</p>
+        <p><strong>Valor:</strong> R$ 5.000.000</p>
+    </div>
+</body>
+</html>

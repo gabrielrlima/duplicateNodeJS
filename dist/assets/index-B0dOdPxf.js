@@ -1,0 +1,1 @@
+import{j as a,H as t,C as e,c as n,T as s}from"./index-D82XrlGq.js";const r={title:`Blank - ${e.appName}`};function l(){return a.jsxs(a.Fragment,{children:[a.jsx(t,{children:a.jsxs("title",{children:[" ",r.title]})}),a.jsx(n,{children:a.jsx(s,{variant:"h4",children:"Blank"})})]})}export{l as default};

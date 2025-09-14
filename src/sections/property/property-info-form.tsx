@@ -1,4 +1,3 @@
-import { z as zod } from 'src/lib/zod-config';
 import { useForm } from 'react-hook-form';
 import { useState, useEffect } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -6,6 +5,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Box, Card, Grid2, Alert, Button, MenuItem, Typography, CardContent } from '@mui/material';
 
 import { fillPropertyFormFromTerreno } from 'src/utils/clone-terreno-to-property';
+
+import { z as zod } from 'src/lib/zod-config';
 
 import { Iconify } from 'src/components/iconify';
 import { Form, Field } from 'src/components/hook-form';

@@ -12,10 +12,10 @@ export function PropertyCreateRedesignedView() {
   return (
     <DashboardContent maxWidth="xl">
       <CustomBreadcrumbs
-        heading="Cadastro Inteligente de Imóvel"
+        heading="Cadastro Inteligente de Produto"
         links={[
           { name: 'Painel', href: paths.dashboard.root },
-          { name: 'Imóveis', href: paths.dashboard.property.root },
+          { name: 'Produtos', href: paths.dashboard.property.root },
           { name: 'Nova Arquitetura de Cadastro' },
         ]}
         sx={{ mb: { xs: 3, md: 5 } }}

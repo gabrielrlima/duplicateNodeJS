@@ -1,12 +1,13 @@
 import type { IPropertyItem } from 'src/types/property';
 
-import { useBoolean, usePopover } from 'minimal-shared/hooks';
 import { toast } from 'sonner';
+import { useBoolean, usePopover } from 'minimal-shared/hooks';
 
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
+import Divider from '@mui/material/Divider';
 import MenuList from '@mui/material/MenuList';
 import Collapse from '@mui/material/Collapse';
 import MenuItem from '@mui/material/MenuItem';
@@ -14,18 +15,17 @@ import TableRow from '@mui/material/TableRow';
 import TableCell from '@mui/material/TableCell';
 import IconButton from '@mui/material/IconButton';
 import ListItemText from '@mui/material/ListItemText';
-import Divider from '@mui/material/Divider';
 
 import { RouterLink } from 'src/routes/components';
 
 import { fCurrency } from 'src/utils/format-number';
-import { fDate, fTime } from 'src/utils/format-time';
+
+import { updatePropertyStatus } from 'src/actions/property';
 
 import { Label } from 'src/components/label';
 import { Iconify } from 'src/components/iconify';
 import { ConfirmDialog } from 'src/components/custom-dialog';
 import { CustomPopover } from 'src/components/custom-popover';
-import { updatePropertyStatus } from 'src/actions/property';
 
 // ----------------------------------------------------------------------
 
@@ -63,37 +63,47 @@ export function PropertyTableRow({ row, onDeleteRow, detailsHref, onUpdateStatus
   const renderPrimaryRow = () => (
     <TableRow hover>
       <TableCell>
-        <Stack sx={{ typography: 'body2', alignItems: 'flex-start' }}>
-          <Box component="span" sx={{ fontWeight: 'fontWeightMedium' }}>
-            {row.titulo}
-          </Box>
+        <Box sx={{ typography: 'body2', fontWeight: 'fontWeightMedium' }}>
+          {row.titulo}
+        </Box>
+      </TableCell>
 
-          <Box component="span" sx={{ color: 'text.disabled' }}>
-            {row.localizacao.bairro}, {row.localizacao.cidade}
-          </Box>
-        </Stack>
+
+
+      <TableCell>
+        <Box sx={{ typography: 'body2' }}>
+          {typeof row.localizacao === 'string' ? row.localizacao : 
+            (typeof row.localizacao === 'object' && row.localizacao?.bairro && row.localizacao?.cidade) ? 
+              `${row.localizacao.bairro}, ${row.localizacao.cidade}` : 
+              'Localização não informada'
+          }
+        </Box>
+        <Box sx={{ typography: 'caption', color: 'text.disabled' }}>
+          {typeof row.localizacao === 'object' && row.localizacao?.estado ? row.localizacao.estado : ''}
+        </Box>
       </TableCell>
 
       <TableCell>
         <Box sx={{ typography: 'body2' }}>
-          {row.corretor || 'Sem corretor'}
+          {(() => {
+            const tipoMap = {
+              'apartment': 'Apartamento',
+              'house': 'Casa',
+              'commercial': 'Comercial',
+              'land': 'Terreno',
+              'penthouse': 'Cobertura',
+              'studio': 'Studio',
+              'loft': 'Loft',
+              'farm': 'Fazenda',
+              'warehouse': 'Galpão',
+              'office': 'Escritório',
+              'empreendimento': 'Empreendimento',
+              'imovel': 'Imóvel',
+              'terreno': 'Terreno'
+            };
+            return tipoMap[row.tipo] || row.tipo || 'Não informado';
+          })()} 
         </Box>
-      </TableCell>
-
-      <TableCell align="center">
-        <Box sx={{ typography: 'body2' }}>{row.area?.toLocaleString('pt-BR') || 0} m²</Box>
-        <Box sx={{ typography: 'caption', color: 'text.disabled' }}>
-          {fCurrency(row.precoM2 || 0)}/m²
-        </Box>
-      </TableCell>
-
-      <TableCell>
-        <Box sx={{ typography: 'body2', fontWeight: 'fontWeightMedium' }}>
-          {fCurrency(row.preco)}
-        </Box>
-        {row.negociavel && (
-          <Box sx={{ typography: 'caption', color: 'warning.main' }}>Negociável</Box>
-        )}
       </TableCell>
 
       <TableCell>
@@ -132,7 +142,7 @@ export function PropertyTableRow({ row, onDeleteRow, detailsHref, onUpdateStatus
 
   const renderSecondaryRow = () => (
     <TableRow>
-      <TableCell sx={{ p: 0, border: 'none' }} colSpan={6}>
+      <TableCell sx={{ p: 0, border: 'none' }} colSpan={5}>
         <Collapse
           in={collapseRow.value}
           timeout="auto"
@@ -149,7 +159,7 @@ export function PropertyTableRow({ row, onDeleteRow, detailsHref, onUpdateStatus
               })}
             >
               {/* Imagem principal */}
-              {row.imagens && row.imagens.length > 0 && row.imagens[0] ? (
+              {row.imagens && row.imagens.length > 0 && row.imagens[0] && (
                 <Box
                   component="img"
                   src={row.imagens[0]}
@@ -162,26 +172,6 @@ export function PropertyTableRow({ row, onDeleteRow, detailsHref, onUpdateStatus
                     flexShrink: 0,
                   }}
                 />
-              ) : (
-                <Box
-                  sx={{
-                    width: 120,
-                    height: 80,
-                    borderRadius: 1,
-                    flexShrink: 0,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    flexDirection: 'column',
-                    bgcolor: 'background.neutral',
-                    border: '1px dashed',
-                    borderColor: 'divider',
-                    gap: 0.5,
-                  }}
-                >
-                  <Iconify icon="solar:image-bold" width={24} sx={{ color: 'text.disabled' }} />
-                  <Box sx={{ typography: 'caption', color: 'text.disabled' }}>Sem imagem</Box>
-                </Box>
               )}
 
               {/* Informações detalhadas */}
@@ -193,36 +183,17 @@ export function PropertyTableRow({ row, onDeleteRow, detailsHref, onUpdateStatus
 
                 {/* Informações principais */}
                 <Stack spacing={1.5}>
-                  {/* Grid com Localização e Proprietário lado a lado */}
-                  <Box sx={{
-                    display: 'grid',
-                    gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' },
-                    gap: 2,
-                  }}>
-                    {/* Localização */}
-                    <Box>
-                      <Box sx={{ typography: 'caption', color: 'text.secondary', mb: 0.5 }}>
-                        Localização
-                      </Box>
-                      <Box sx={{ typography: 'body2' }}>
-                        {row.localizacao.endereco}
-                      </Box>
-                      <Box sx={{ typography: 'caption', color: 'text.disabled' }}>
-                        {row.localizacao.bairro}, {row.localizacao.cidade} - {row.localizacao.estado}
-                      </Box>
+                  {/* Localização */}
+                  <Box>
+                    <Box sx={{ typography: 'caption', color: 'text.secondary', mb: 0.5 }}>
+                      Localização
                     </Box>
-
-                    {/* Proprietário */}
-                    <Box>
-                      <Box sx={{ typography: 'caption', color: 'text.secondary', mb: 0.5 }}>
-                        Proprietário
-                      </Box>
-                      <Box sx={{ typography: 'body2' }}>
-                        {row.proprietario.nome}
-                      </Box>
-                      <Box sx={{ typography: 'caption', color: 'text.disabled' }}>
-                        {row.proprietario.telefone}
-                      </Box>
+                    <Box sx={{ typography: 'body2' }}>
+                      {typeof row.localizacao === 'string' ? row.localizacao : 
+                        row.localizacao?.endereco ? 
+                          `${row.localizacao.endereco}, ${row.localizacao.bairro}, ${row.localizacao.cidade} - ${row.localizacao.estado}` : 
+                          'Localização não informada'
+                      }
                     </Box>
                   </Box>
 
@@ -236,30 +207,118 @@ export function PropertyTableRow({ row, onDeleteRow, detailsHref, onUpdateStatus
                       gridTemplateColumns: 'repeat(auto-fit, minmax(80px, 1fr))',
                       gap: 1,
                     }}>
+                      {/* Preço - sempre exibido */}
                       <Box sx={{ textAlign: 'center' }}>
                         <Box sx={{ typography: 'body2', fontWeight: 'fontWeightMedium' }}>
-                          {row.caracteristicas?.quartos || 0}
+                          {(() => {
+                            // Para empreendimentos, calcular preço médio das plantas
+                            if (row.tipo === 'empreendimento') {
+                              const plantas: any[] = [];
+                              if (plantas && plantas.length > 0) {
+                                const plantasComPreco = plantas.filter((p: any) => 
+                                  (p.precoPorM2 || p.pricePerM2 || p.price_per_m2) > 0
+                                );
+                                if (plantasComPreco.length > 0) {
+                                  const precos = plantasComPreco.map((p: any) => 
+                                    p.precoPorM2 || p.pricePerM2 || p.price_per_m2
+                                  );
+                                  const precoMedio = precos.reduce((a: number, b: number) => a + b, 0) / precos.length;
+                                  return `R$ ${Math.round(precoMedio)}/m²`;
+                                }
+                              }
+                              return row.preco ? fCurrency(row.preco) : 'Consulte';
+                            }
+                            // Para outros tipos, exibir preço normal
+                            return row.preco ? fCurrency(row.preco) : 'Consulte';
+                          })()} 
                         </Box>
-                        <Box sx={{ typography: 'caption', color: 'text.disabled' }}>Quartos</Box>
+                        <Box sx={{ typography: 'caption', color: 'text.disabled' }}>Preço</Box>
                       </Box>
-                      <Box sx={{ textAlign: 'center' }}>
-                        <Box sx={{ typography: 'body2', fontWeight: 'fontWeightMedium' }}>
-                          {row.caracteristicas?.banheiros || 0}
-                        </Box>
-                        <Box sx={{ typography: 'caption', color: 'text.disabled' }}>Banheiros</Box>
-                      </Box>
-                      <Box sx={{ textAlign: 'center' }}>
-                        <Box sx={{ typography: 'body2', fontWeight: 'fontWeightMedium' }}>
-                          {row.caracteristicas?.suites || 0}
-                        </Box>
-                        <Box sx={{ typography: 'caption', color: 'text.disabled' }}>Suítes</Box>
-                      </Box>
-                      <Box sx={{ textAlign: 'center' }}>
-                        <Box sx={{ typography: 'body2', fontWeight: 'fontWeightMedium' }}>
-                          {row.caracteristicas?.vagasGaragem || 0}
-                        </Box>
-                        <Box sx={{ typography: 'caption', color: 'text.disabled' }}>Vagas</Box>
-                      </Box>
+
+                      {/* Características específicas por tipo */}
+                      {row.tipo === 'empreendimento' ? (
+                        <>
+                          {/* Quantidade de plantas */}
+                          <Box sx={{ textAlign: 'center' }}>
+                            <Box sx={{ typography: 'body2', fontWeight: 'fontWeightMedium' }}>
+                              {(() => {
+                                const plantas: any[] = [];
+                                return plantas.length || 0;
+                              })()}
+                            </Box>
+                            <Box sx={{ typography: 'caption', color: 'text.disabled' }}>Plantas</Box>
+                          </Box>
+                          
+                          {/* Faixa de área das plantas */}
+                          <Box sx={{ textAlign: 'center' }}>
+                            <Box sx={{ typography: 'body2', fontWeight: 'fontWeightMedium' }}>
+                              {(() => {
+                                const plantas: any[] = [];
+                                if (plantas && plantas.length > 0) {
+                                  const areas = plantas.map((p: any) => p.area).filter((a: number) => a > 0);
+                                  if (areas.length > 0) {
+                                    const minArea = Math.min(...areas);
+                                    const maxArea = Math.max(...areas);
+                                    return minArea === maxArea ? `${minArea}m²` : `${minArea}-${maxArea}m²`;
+                                  }
+                                }
+                                return row.area || 0;
+                              })()}
+                            </Box>
+                            <Box sx={{ typography: 'caption', color: 'text.disabled' }}>Área</Box>
+                          </Box>
+                        </>
+                      ) : row.tipo === 'terreno' ? (
+                        <>
+                          {/* Características específicas para terrenos */}
+                          <Box sx={{ textAlign: 'center' }}>
+                            <Box sx={{ typography: 'body2', fontWeight: 'fontWeightMedium' }}>
+                              {(() => {
+                                const preco = row.preco || 0;
+                                const area = row.area || row.caracteristicas?.area || 0;
+                                if (preco > 0 && area > 0) {
+                                  const valorM2 = Math.round(preco / area);
+                                  return `R$ ${valorM2}/m²`;
+                                }
+                                return 'N/A';
+                              })()}
+                            </Box>
+                            <Box sx={{ typography: 'caption', color: 'text.disabled' }}>Valor/m²</Box>
+                          </Box>
+                          
+                          <Box sx={{ textAlign: 'center' }}>
+                            <Box sx={{ typography: 'body2', fontWeight: 'fontWeightMedium' }}>
+                              {(() => {
+                                const area = row.area || row.caracteristicas?.area || 0;
+                                return area > 0 ? `${area}m²` : 'N/A';
+                              })()}
+                            </Box>
+                            <Box sx={{ typography: 'caption', color: 'text.disabled' }}>Área</Box>
+                          </Box>
+                        </>
+                      ) : (
+                        <>
+                          {/* Características tradicionais para imóveis */}
+                          <Box sx={{ textAlign: 'center' }}>
+                            <Box sx={{ typography: 'body2', fontWeight: 'fontWeightMedium' }}>
+                              {row.caracteristicas?.quartos || 0}
+                            </Box>
+                            <Box sx={{ typography: 'caption', color: 'text.disabled' }}>Quartos</Box>
+                          </Box>
+                          <Box sx={{ textAlign: 'center' }}>
+                            <Box sx={{ typography: 'body2', fontWeight: 'fontWeightMedium' }}>
+                              {row.caracteristicas?.banheiros || 0}
+                            </Box>
+                            <Box sx={{ typography: 'caption', color: 'text.disabled' }}>Banheiros</Box>
+                          </Box>
+                          <Box sx={{ textAlign: 'center' }}>
+                            <Box sx={{ typography: 'body2', fontWeight: 'fontWeightMedium' }}>
+                              {row.caracteristicas?.vagasGaragem || 0}
+                            </Box>
+                            <Box sx={{ typography: 'caption', color: 'text.disabled' }}>Vagas</Box>
+                          </Box>
+                        </>
+                      )}
                     </Box>
                   </Box>
 
@@ -317,29 +376,16 @@ export function PropertyTableRow({ row, onDeleteRow, detailsHref, onUpdateStatus
             onClick={menuActions.onClose}
           >
             <Iconify icon="solar:eye-bold" />
-            <ListItemText primary="Ver" />
+            <ListItemText primary="Ver detalhes" />
           </MenuItem>
 
-          <Divider sx={{ borderStyle: 'dashed' }} />
-
-          <MenuItem onClick={() => handleUpdateStatus('disponivel')}>
-            <Iconify icon="solar:check-circle-bold" />
-            <ListItemText primary="Marcar como Disponível" />
-          </MenuItem>
-
-          <MenuItem onClick={() => handleUpdateStatus('reservado')}>
-            <Iconify icon="solar:clock-circle-bold" />
-            <ListItemText primary="Marcar como Reservado" />
-          </MenuItem>
-
-          <MenuItem onClick={() => handleUpdateStatus('vendido')}>
-            <Iconify icon="solar:check-square-bold" />
-            <ListItemText primary="Marcar como Vendido" />
-          </MenuItem>
-
-          <MenuItem onClick={() => handleUpdateStatus('suspenso')}>
-            <Iconify icon="solar:pause-circle-bold" />
-            <ListItemText primary="Suspender" />
+          <MenuItem
+            component={RouterLink}
+            href={`${detailsHref}/edit`}
+            onClick={menuActions.onClose}
+          >
+            <Iconify icon="solar:pen-bold" />
+            <ListItemText primary="Editar" />
           </MenuItem>
 
           <Divider sx={{ borderStyle: 'dashed' }} />

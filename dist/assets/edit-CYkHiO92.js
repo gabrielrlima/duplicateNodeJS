@@ -1,0 +1,1 @@
+import{j as t,H as r}from"./index-D82XrlGq.js";import{R as i}from"./relatorios-list-view-Dj0hZSEs.js";import"./dashboard-stats-card-H28sBg4H.js";import"./Card-Bw-3A9ev.js";import"./Grid-CxfBC3qm.js";function l(){return t.jsxs(t.Fragment,{children:[t.jsx(r,{children:t.jsx("title",{children:" Relatórios v4 - Editar"})}),t.jsx(i,{})]})}export{l as default};

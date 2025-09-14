@@ -41,32 +41,15 @@ export const navData: NavSectionProps['data'] = [
     subheader: 'Gestão de Negócios',
     items: [
       {
-        title: 'Imóveis',
+        title: 'Produtos',
         path: paths.dashboard.property.root,
-        icon: <Iconify icon="solar:home-bold-duotone" />,
-        children: [
-          { title: 'Todos os imóveis', path: paths.dashboard.property.list },
-          { title: 'Cadastrar imóvel', path: paths.dashboard.property.new },
-        ],
-      },
-      {
-        title: 'Terrenos',
-        path: paths.dashboard.terrenos.root,
-        icon: <Iconify icon="solar:map-point-bold-duotone" />,
-        children: [
-          { title: 'Todos os terrenos', path: paths.dashboard.terrenos.list },
-          { title: 'Cadastrar terreno', path: paths.dashboard.terrenos.new },
-        ],
-      },
-      {
-        title: 'Empreendimentos',
-        path: paths.dashboard.empreendimentos.root,
         icon: <Iconify icon="solar:box-bold-duotone" />,
         children: [
-          { title: 'Todos os empreendimentos', path: paths.dashboard.empreendimentos.list },
-          { title: 'Cadastrar empreendimento', path: paths.dashboard.empreendimentos.new },
+          { title: 'Todos os produtos', path: paths.dashboard.property.list },
+          { title: 'Cadastrar produto', path: paths.dashboard.property.new },
         ],
       },
+
       {
         title: 'Clientes',
         path: paths.dashboard.client.root,

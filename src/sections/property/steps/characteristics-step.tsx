@@ -1,6 +1,8 @@
-import { Card, Stack, Typography, Grid, MenuItem, FormControlLabel, Checkbox, FormGroup } from '@mui/material';
-import { Field } from 'src/components/hook-form';
 import { useFormContext } from 'react-hook-form';
+
+import { Card, Grid, Stack, MenuItem, Checkbox, FormGroup, Typography, FormControlLabel } from '@mui/material';
+
+import { Field } from 'src/components/hook-form';
 
 export function CharacteristicsStep() {
   const { watch, setValue } = useFormContext();

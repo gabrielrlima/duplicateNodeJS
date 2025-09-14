@@ -25,7 +25,7 @@ const getStatsDataForRealEstate = (realEstateId: string | null) => {
   if (!realEstateId) {
     return [
       {
-        title: 'Produtos cadastrados',
+        title: 'Imóveis cadastrados',
         value: 0,
         icon: 'solar:home-bold-duotone',
         color: 'grey' as const,
@@ -59,7 +59,7 @@ const getStatsDataForRealEstate = (realEstateId: string | null) => {
   // Por enquanto, retornando dados mock para demonstração
   return [
     {
-      title: 'Produtos cadastrados',
+      title: 'Imóveis cadastrados',
       value: 0,
       icon: 'solar:home-bold-duotone',
       color: 'grey' as const,

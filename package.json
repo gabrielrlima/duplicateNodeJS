@@ -21,7 +21,15 @@
     "re:build-npm": "npm run clean && npm install && npm run build",
     "tsc:dev": "yarn dev & yarn tsc:watch",
     "tsc:watch": "tsc --noEmit --watch",
-    "tsc:print": "npx tsc --showConfig"
+    "tsc:print": "npx tsc --showConfig",
+    "seed:test": "tsx scripts/test-seed.ts",
+    "seed:products": "tsx scripts/seed-test-products.ts",
+    "seed:frontend": "tsx scripts/seed-new-form.ts",
+    "seed:auto": "node scripts/auto-seed.js",
+    "seed:manual": "node scripts/manual-seed.js",
+    "seed:api": "node scripts/api-login-seed.js",
+    "seed:new": "tsx scripts/seed-new-form.ts",
+    "seed:help": "echo \"📋 Comandos disponíveis:\n  npm run seed:test - Testa configuração\n  npm run seed:products - Cria 30 produtos\n  npm run seed:frontend - Cria 10 imóveis\n  npm run seed:auto - Login automático + seeding\n  npm run seed:help - Mostra esta ajuda\""
   },
   "engines": {
     "node": ">=14.0.0",
@@ -75,6 +83,7 @@
     "aws-amplify": "^6.15.5",
     "axios": "^1.11.0",
     "dayjs": "^1.11.13",
+    "dotenv": "^16.6.1",
     "embla-carousel": "^8.6.0",
     "embla-carousel-auto-height": "^8.6.0",
     "embla-carousel-auto-scroll": "^8.6.0",
@@ -140,6 +149,8 @@
     "eslint-plugin-unused-imports": "^4.1.4",
     "globals": "^15.15.0",
     "prettier": "^3.6.2",
+    "puppeteer": "^24.20.0",
+    "tsx": "^4.20.5",
     "typescript": "^5.9.2",
     "typescript-eslint": "^8.39.1",
     "vite": "^6.3.5",

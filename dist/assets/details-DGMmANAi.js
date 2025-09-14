@@ -1,0 +1,1 @@
+import{j as t,H as e}from"./index-D82XrlGq.js";import{R as r}from"./relatorios-list-view-Dj0hZSEs.js";import"./dashboard-stats-card-H28sBg4H.js";import"./Card-Bw-3A9ev.js";import"./Grid-CxfBC3qm.js";function m(){return t.jsxs(t.Fragment,{children:[t.jsx(e,{children:t.jsx("title",{children:" Relatórios v4 - Detalhes"})}),t.jsx(r,{})]})}export{m as default};

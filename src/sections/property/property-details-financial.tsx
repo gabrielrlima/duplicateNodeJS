@@ -1,12 +1,12 @@
 import type { IPropertyItem } from 'src/types/property';
 
 import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
 import Card from '@mui/material/Card';
-import CardHeader from '@mui/material/CardHeader';
-import Typography from '@mui/material/Typography';
 import Chip from '@mui/material/Chip';
 import Grid from '@mui/material/Grid';
+import Stack from '@mui/material/Stack';
+import CardHeader from '@mui/material/CardHeader';
+import Typography from '@mui/material/Typography';
 
 import { fCurrency } from 'src/utils/format-number';
 
@@ -125,8 +125,8 @@ export function PropertyDetailsFinancial({ property, propertyData }: Props) {
               Documentação
             </Typography>
             <Chip 
-              label={'Completa'} 
-              color={'success'}
+              label="Completa" 
+              color="success"
               size="small" 
             />
           </Box>

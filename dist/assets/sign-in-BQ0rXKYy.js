@@ -1,0 +1,1 @@
+import{j as e,H as t,C as i}from"./index-D82XrlGq.js";import{C as n}from"./centered-update-password-view-LMQpo01w.js";import"./schema-helper-BcHhi0sG.js";const r={title:`Sign in | Layout centered - ${i.appName}`};function o(){return e.jsxs(e.Fragment,{children:[e.jsx(t,{children:e.jsxs("title",{children:[" ",r.title]})}),e.jsx(n,{})]})}export{o as default};

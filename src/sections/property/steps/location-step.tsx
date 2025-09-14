@@ -1,4 +1,5 @@
-import { Card, Stack, Typography, Grid, MenuItem } from '@mui/material';
+import { Card, Grid, Stack, MenuItem, Typography } from '@mui/material';
+
 import { Field } from 'src/components/hook-form';
 
 // Lista de estados brasileiros

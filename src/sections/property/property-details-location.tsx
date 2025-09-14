@@ -3,10 +3,10 @@ import type { IPropertyItem } from 'src/types/property';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
+import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
 import CardHeader from '@mui/material/CardHeader';
 import Typography from '@mui/material/Typography';
-import Grid from '@mui/material/Grid';
 
 import { Iconify } from 'src/components/iconify';
 
@@ -21,13 +21,18 @@ export function PropertyDetailsLocation({ sx, property, propertyData, ...other }
   const propertyItem = propertyData || property;
   const localizacao = propertyItem?.localizacao;
   
+  // Type guard para verificar se localizacao é um objeto IPropertyLocalizacao
+  const isLocalizacaoObject = (loc: any): loc is import('src/types/property').IPropertyLocalizacao => loc && typeof loc === 'object' && typeof loc.endereco === 'string';
+  
+  const localizacaoObj = isLocalizacaoObject(localizacao) ? localizacao : null;
+  
   const handleOpenMap = () => {
-    if (localizacao?.coordenadas) {
-      const url = `https://www.google.com/maps?q=${localizacao.coordenadas.lat},${localizacao.coordenadas.lng}`;
+    if (localizacaoObj?.coordenadas) {
+      const url = `https://www.google.com/maps?q=${localizacaoObj.coordenadas.lat},${localizacaoObj.coordenadas.lng}`;
       window.open(url, '_blank');
-    } else if (localizacao?.endereco) {
+    } else if (localizacaoObj?.endereco) {
       // Fallback para busca por endereço
-      const searchQuery = `${localizacao.endereco}, ${localizacao.bairro}, ${localizacao.cidade}, ${localizacao.estado}`;
+      const searchQuery = `${localizacaoObj.endereco}, ${localizacaoObj.bairro}, ${localizacaoObj.cidade}, ${localizacaoObj.estado}`;
       const url = `https://www.google.com/maps/search/${encodeURIComponent(searchQuery)}`;
       window.open(url, '_blank');
     }
@@ -57,16 +62,16 @@ export function PropertyDetailsLocation({ sx, property, propertyData, ...other }
             Endereço
           </Typography>
           <Typography variant="subtitle2" sx={{ mb: 1 }}>
-            {localizacao?.endereco || 'Não informado'}
+            {localizacaoObj?.endereco || (typeof localizacao === 'string' ? localizacao : 'Não informado')}
           </Typography>
 
-          {localizacao?.complemento && (
+          {localizacaoObj?.complemento && (
             <>
               <Typography variant="body2" sx={{ color: 'text.secondary', mb: 0.5 }}>
                 Complemento
               </Typography>
               <Typography variant="subtitle2" sx={{ mb: 1 }}>
-                {localizacao.complemento}
+                {localizacaoObj.complemento}
               </Typography>
             </>
           )}
@@ -77,7 +82,7 @@ export function PropertyDetailsLocation({ sx, property, propertyData, ...other }
                 Bairro
               </Typography>
               <Typography variant="subtitle2">
-                {localizacao?.bairro || 'Não informado'}
+                {localizacaoObj?.bairro || 'Não informado'}
               </Typography>
             </Grid>
 
@@ -86,7 +91,7 @@ export function PropertyDetailsLocation({ sx, property, propertyData, ...other }
                 CEP
               </Typography>
               <Typography variant="subtitle2">
-                {localizacao?.cep || 'Não informado'}
+                {localizacaoObj?.cep || 'Não informado'}
               </Typography>
             </Grid>
 
@@ -95,7 +100,7 @@ export function PropertyDetailsLocation({ sx, property, propertyData, ...other }
                 Cidade
               </Typography>
               <Typography variant="subtitle2">
-                {localizacao?.cidade || 'Não informado'}
+                {localizacaoObj?.cidade || 'Não informado'}
               </Typography>
             </Grid>
 
@@ -104,7 +109,7 @@ export function PropertyDetailsLocation({ sx, property, propertyData, ...other }
                 Estado
               </Typography>
               <Typography variant="subtitle2">
-                {localizacao?.estado || 'Não informado'}
+                {localizacaoObj?.estado || 'Não informado'}
               </Typography>
             </Grid>
           </Grid>

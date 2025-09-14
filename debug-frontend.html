@@ -1,123 +1,252 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-BR">
 <head>
-    <title>Debug Frontend - Terrenos</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Frontend - Teste de API</title>
     <style>
-        body { font-family: Arial, sans-serif; margin: 20px; }
-        .section { margin: 20px 0; padding: 15px; border: 1px solid #ccc; }
-        .success { color: green; }
-        .error { color: red; }
-        .info { color: blue; }
-        pre { background: #f5f5f5; padding: 10px; overflow-x: auto; }
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .result {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            padding: 15px;
+            margin: 10px 0;
+            white-space: pre-wrap;
+            font-family: monospace;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .success { border-color: #28a745; background-color: #d4edda; }
+        .error { border-color: #dc3545; background-color: #f8d7da; }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover { background: #0056b3; }
+        .loading { opacity: 0.6; pointer-events: none; }
     </style>
 </head>
 <body>
-    <h1>Debug Frontend - Terrenos</h1>
-    
-    <div class="section">
-        <h2>1. LocalStorage</h2>
-        <div id="localStorage-info"></div>
-    </div>
-    
-    <div class="section">
-        <h2>2. Teste de API</h2>
-        <button onclick="testAPI()">Testar API de Terrenos</button>
-        <div id="api-result"></div>
-    </div>
-    
-    <div class="section">
-        <h2>3. Instruções</h2>
-        <p>1. Abra o console do navegador (F12)</p>
-        <p>2. Navegue para a página de terrenos: <a href="http://localhost:8080/dashboard/terrenos/todos-os-terrenos" target="_blank">http://localhost:8080/dashboard/terrenos/todos-os-terrenos</a></p>
-        <p>3. No console, digite: <code>localStorage.getItem('currentRealEstate')</code></p>
-        <p>4. Verifique se a imobiliária "Adão imóveis" está selecionada</p>
-        <p>5. Se não estiver, selecione-a no header da aplicação</p>
+    <div class="container">
+        <h1>🔍 Debug Frontend - Teste de API</h1>
+        
+        <div>
+            <h3>1. Teste de Login</h3>
+            <button onclick="testLogin()">Fazer Login</button>
+            <div id="loginResult" class="result"></div>
+        </div>
+        
+        <div>
+            <h3>2. Buscar Imobiliárias</h3>
+            <button onclick="testRealEstates()" id="realEstateBtn" disabled>Buscar Imobiliárias</button>
+            <div id="realEstateResult" class="result"></div>
+        </div>
+        
+        <div>
+            <h3>3. Buscar Produtos</h3>
+            <button onclick="testProducts()" id="productsBtn" disabled>Buscar Produtos</button>
+            <div id="productsResult" class="result"></div>
+        </div>
+        
+        <div>
+            <h3>4. Teste Completo</h3>
+            <button onclick="runFullTest()">Executar Teste Completo</button>
+            <div id="fullTestResult" class="result"></div>
+        </div>
     </div>
 
     <script>
-        // Verificar localStorage
-        function checkLocalStorage() {
-            const currentRealEstate = localStorage.getItem('currentRealEstate');
-            const localStorageDiv = document.getElementById('localStorage-info');
+        let authToken = null;
+        let currentRealEstate = null;
+        
+        const API_BASE = 'http://localhost:3001';
+        
+        function log(elementId, message, isError = false) {
+            const element = document.getElementById(elementId);
+            const timestamp = new Date().toLocaleTimeString();
+            const logMessage = `[${timestamp}] ${message}\n`;
+            element.textContent += logMessage;
+            element.className = `result ${isError ? 'error' : 'success'}`;
+            element.scrollTop = element.scrollHeight;
+        }
+        
+        function clearLog(elementId) {
+            document.getElementById(elementId).textContent = '';
+        }
+        
+        async function testLogin() {
+            clearLog('loginResult');
+            log('loginResult', '🔐 Iniciando teste de login...');
             
-            if (currentRealEstate) {
-                try {
-                    const parsed = JSON.parse(currentRealEstate);
-                    localStorageDiv.innerHTML = `
-                        <div class="success">✅ Imobiliária encontrada no localStorage:</div>
-                        <pre>${JSON.stringify(parsed, null, 2)}</pre>
-                    `;
-                } catch (e) {
-                    localStorageDiv.innerHTML = `
-                        <div class="error">❌ Erro ao parsear localStorage:</div>
-                        <pre>${currentRealEstate}</pre>
-                    `;
+            try {
+                const response = await fetch(`${API_BASE}/api/auth/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        email: 'gabriel@teste.com',
+                        password: '123456'
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    authToken = data.data.token;
+                    log('loginResult', '✅ Login realizado com sucesso!');
+                    log('loginResult', `Token: ${authToken.substring(0, 20)}...`);
+                    
+                    // Habilitar próximos botões
+                    document.getElementById('realEstateBtn').disabled = false;
+                    document.getElementById('productsBtn').disabled = false;
+                } else {
+                    log('loginResult', `❌ Erro no login: ${data.message}`, true);
                 }
-            } else {
-                localStorageDiv.innerHTML = `
-                    <div class="error">❌ Nenhuma imobiliária encontrada no localStorage</div>
-                    <p class="info">Isso pode explicar por que os terrenos não aparecem.</p>
-                `;
+            } catch (error) {
+                log('loginResult', `❌ Erro na requisição: ${error.message}`, true);
             }
         }
         
-        // Testar API
-        async function testAPI() {
-            const resultDiv = document.getElementById('api-result');
-            resultDiv.innerHTML = '<div class="info">🔄 Testando API...</div>';
+        async function testRealEstates() {
+            if (!authToken) {
+                log('realEstateResult', '❌ Faça login primeiro!', true);
+                return;
+            }
+            
+            clearLog('realEstateResult');
+            log('realEstateResult', '🏢 Buscando imobiliárias...');
             
             try {
-                // Verificar se há token no localStorage
-                const token = localStorage.getItem('accessToken');
-                if (!token) {
-                    resultDiv.innerHTML = '<div class="error">❌ Token não encontrado. Faça login primeiro.</div>';
-                    return;
-                }
-                
-                // Verificar imobiliária atual
-                const currentRealEstate = localStorage.getItem('currentRealEstate');
-                if (!currentRealEstate) {
-                    resultDiv.innerHTML = '<div class="error">❌ Nenhuma imobiliária selecionada.</div>';
-                    return;
-                }
-                
-                const realEstate = JSON.parse(currentRealEstate);
-                
-                // Testar API de terrenos
-                const response = await fetch(`http://localhost:3001/api/terreno/list?real_estate_id=${realEstate.id}`, {
+                const response = await fetch(`${API_BASE}/api/real-estate`, {
                     headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json'
+                        'Authorization': `Bearer ${authToken}`
                     }
                 });
                 
                 const data = await response.json();
                 
-                if (response.ok && data.success) {
-                    resultDiv.innerHTML = `
-                        <div class="success">✅ API funcionando!</div>
-                        <p>Terrenos encontrados: ${data.data.terrenos.length}</p>
-                        <pre>${JSON.stringify(data.data.terrenos.slice(0, 2), null, 2)}</pre>
-                    `;
+                if (data.success && data.data) {
+                    log('realEstateResult', `✅ ${data.data.length} imobiliárias encontradas:`);
+                    data.data.forEach((re, index) => {
+                        log('realEstateResult', `   ${index + 1}. ${re.name} (ID: ${re.id})`);
+                    });
+                    
+                    if (data.data.length > 0) {
+                        currentRealEstate = data.data[0];
+                        log('realEstateResult', `🎯 Selecionada: ${currentRealEstate.name}`);
+                    }
                 } else {
-                    resultDiv.innerHTML = `
-                        <div class="error">❌ Erro na API:</div>
-                        <pre>${JSON.stringify(data, null, 2)}</pre>
-                    `;
+                    log('realEstateResult', `❌ Erro: ${data.message}`, true);
                 }
-                
             } catch (error) {
-                resultDiv.innerHTML = `
-                    <div class="error">❌ Erro:</div>
-                    <pre>${error.message}</pre>
-                `;
+                log('realEstateResult', `❌ Erro na requisição: ${error.message}`, true);
             }
         }
         
-        // Executar verificações ao carregar
-        window.onload = function() {
-            checkLocalStorage();
-        };
+        async function testProducts() {
+            if (!authToken) {
+                log('productsResult', '❌ Faça login primeiro!', true);
+                return;
+            }
+            
+            clearLog('productsResult');
+            log('productsResult', '📦 Buscando produtos...');
+            
+            try {
+                let url = `${API_BASE}/api/products`;
+                if (currentRealEstate) {
+                    url += `?real_estate_id=${currentRealEstate.id}`;
+                    log('productsResult', `🎯 Filtrando por imobiliária: ${currentRealEstate.name}`);
+                }
+                
+                const response = await fetch(url, {
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`
+                    }
+                });
+                
+                const data = await response.json();
+                
+                if (data.success && data.data) {
+                    log('productsResult', `✅ ${data.data.length} produtos encontrados:`);
+                    
+                    const tipos = {};
+                    data.data.forEach((produto, index) => {
+                        const tipo = produto.type || produto.tipo || 'indefinido';
+                        tipos[tipo] = (tipos[tipo] || 0) + 1;
+                        
+                        if (index < 5) { // Mostrar apenas os primeiros 5
+                            log('productsResult', `   ${index + 1}. ${produto.name || produto.title || produto.titulo} (${tipo})`);
+                        }
+                    });
+                    
+                    if (data.data.length > 5) {
+                        log('productsResult', `   ... e mais ${data.data.length - 5} produtos`);
+                    }
+                    
+                    log('productsResult', '\n📊 Resumo por tipo:');
+                    Object.entries(tipos).forEach(([tipo, count]) => {
+                        log('productsResult', `   ${tipo}: ${count} produto(s)`);
+                    });
+                } else {
+                    log('productsResult', `❌ Erro: ${data.message}`, true);
+                }
+            } catch (error) {
+                log('productsResult', `❌ Erro na requisição: ${error.message}`, true);
+            }
+        }
+        
+        async function runFullTest() {
+            clearLog('fullTestResult');
+            log('fullTestResult', '🚀 Iniciando teste completo...');
+            
+            // Reset
+            authToken = null;
+            currentRealEstate = null;
+            
+            try {
+                // 1. Login
+                log('fullTestResult', '\n1️⃣ Fazendo login...');
+                await testLogin();
+                
+                if (!authToken) {
+                    log('fullTestResult', '❌ Teste interrompido - falha no login', true);
+                    return;
+                }
+                
+                // 2. Buscar imobiliárias
+                log('fullTestResult', '\n2️⃣ Buscando imobiliárias...');
+                await testRealEstates();
+                
+                // 3. Buscar produtos
+                log('fullTestResult', '\n3️⃣ Buscando produtos...');
+                await testProducts();
+                
+                log('fullTestResult', '\n✅ Teste completo finalizado!');
+                
+            } catch (error) {
+                log('fullTestResult', `❌ Erro no teste completo: ${error.message}`, true);
+            }
+        }
     </script>
 </body>
 </html>

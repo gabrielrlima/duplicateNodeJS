@@ -1,15 +1,18 @@
+import { z as zod } from 'zod';
+import { toast } from 'sonner';
 import { useCallback } from 'react';
 import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z as zod } from 'zod';
 import { useBoolean } from 'minimal-shared/hooks';
-import { useRouter } from 'src/routes/hooks';
-import { paths } from 'src/routes/paths';
-import { useRealEstateContext } from 'src/contexts/real-estate-context';
-import { createProperty } from 'src/actions/property';
-import { toast } from 'sonner';
+import { zodResolver } from '@hookform/resolvers/zod';
 
-import { Card, Stack, Button, Typography, Grid, MenuItem } from '@mui/material';
+import { Card, Grid, Stack, Button, MenuItem, Typography } from '@mui/material';
+
+import { paths } from 'src/routes/paths';
+import { useRouter } from 'src/routes/hooks';
+
+import { createProperty } from 'src/actions/property';
+import { useRealEstateContext } from 'src/contexts/real-estate-context';
+
 import { Form, Field } from 'src/components/hook-form';
 
 // Schema expandido com campos essenciais
@@ -220,9 +223,9 @@ export function PropertySimpleForm() {
               <Grid item xs={12} md={4}>
                 <Field.Number
                   name="preco"
-                  label="Preço (R$)"
-                  placeholder="Ex: 350000"
-                  formatThousands
+                  label="Preço"
+                  placeholder="R$ 350.000,00"
+                  formatCurrency
                   required
                 />
               </Grid>
@@ -396,13 +399,39 @@ export function PropertySimpleForm() {
                 />
               </Grid>
               <Grid item xs={12} md={6}>
-                <Field.Text
+                <Field.Select
                   name="endereco.estado"
                   label="Estado (UF)"
-                  placeholder="Ex: SP"
-                  inputProps={{ maxLength: 2 }}
                   required
-                />
+                >
+                  <MenuItem value="AC">Acre</MenuItem>
+                  <MenuItem value="AL">Alagoas</MenuItem>
+                  <MenuItem value="AP">Amapá</MenuItem>
+                  <MenuItem value="AM">Amazonas</MenuItem>
+                  <MenuItem value="BA">Bahia</MenuItem>
+                  <MenuItem value="CE">Ceará</MenuItem>
+                  <MenuItem value="DF">Distrito Federal</MenuItem>
+                  <MenuItem value="ES">Espírito Santo</MenuItem>
+                  <MenuItem value="GO">Goiás</MenuItem>
+                  <MenuItem value="MA">Maranhão</MenuItem>
+                  <MenuItem value="MT">Mato Grosso</MenuItem>
+                  <MenuItem value="MS">Mato Grosso do Sul</MenuItem>
+                  <MenuItem value="MG">Minas Gerais</MenuItem>
+                  <MenuItem value="PA">Pará</MenuItem>
+                  <MenuItem value="PB">Paraíba</MenuItem>
+                  <MenuItem value="PR">Paraná</MenuItem>
+                  <MenuItem value="PE">Pernambuco</MenuItem>
+                  <MenuItem value="PI">Piauí</MenuItem>
+                  <MenuItem value="RJ">Rio de Janeiro</MenuItem>
+                  <MenuItem value="RN">Rio Grande do Norte</MenuItem>
+                  <MenuItem value="RS">Rio Grande do Sul</MenuItem>
+                  <MenuItem value="RO">Rondônia</MenuItem>
+                  <MenuItem value="RR">Roraima</MenuItem>
+                  <MenuItem value="SC">Santa Catarina</MenuItem>
+                  <MenuItem value="SP">São Paulo</MenuItem>
+                  <MenuItem value="SE">Sergipe</MenuItem>
+                  <MenuItem value="TO">Tocantins</MenuItem>
+                </Field.Select>
               </Grid>
               <Grid item xs={12} md={4}>
                 <Field.Cep
@@ -532,12 +561,12 @@ export function PropertySimpleForm() {
               loading={loadingSave.value}
               sx={{ minWidth: 200 }}
               onClick={() => {
-                console.log('🖱️ Botão Criar Imóvel clicado!');
+                console.log('🖱️ Botão Criar Produto clicado!');
                 console.log('📊 Estado do formulário:', methods.formState);
                 console.log('❌ Erros de validação:', methods.formState.errors);
               }}
             >
-              Criar Imóvel
+              Criar Produto
             </Button>
             <Button
               variant="outlined"

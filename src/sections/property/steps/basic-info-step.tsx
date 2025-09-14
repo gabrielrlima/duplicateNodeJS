@@ -1,4 +1,5 @@
-import { Card, Stack, Typography, Grid, MenuItem } from '@mui/material';
+import { Card, Grid, Stack, MenuItem, Typography } from '@mui/material';
+
 import { Field } from 'src/components/hook-form';
 
 export function BasicInfoStep() {
@@ -10,14 +11,14 @@ export function BasicInfoStep() {
             Informações Básicas
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            Preencha os dados principais do imóvel
+            Preencha os dados principais do produto
           </Typography>
         </Stack>
 
         <Stack spacing={3}>
           <Field.Text 
             name="titulo" 
-            label="Título do Imóvel" 
+            label="Título do Produto" 
             placeholder="Ex: Apartamento 3 Quartos Vila Madalena"
             required
             helperText="Escolha um título atrativo e descritivo"
@@ -26,10 +27,10 @@ export function BasicInfoStep() {
           <Field.Text 
             name="descricao" 
             label="Descrição" 
-            placeholder="Descreva as características do imóvel..."
+            placeholder="Descreva as características do produto..."
             multiline
             rows={4}
-            helperText="Detalhe as principais características e diferenciais do imóvel"
+            helperText="Detalhe as principais características e diferenciais do produto"
           />
 
           <Field.Number
@@ -38,7 +39,7 @@ export function BasicInfoStep() {
             placeholder="Ex: 350000"
             formatThousands
             required
-            helperText="Valor do imóvel em reais"
+            helperText="Valor do produto em reais"
             InputProps={{
               startAdornment: 'R$'
             }}
@@ -60,9 +61,9 @@ export function BasicInfoStep() {
             <Grid item xs={12} md={6}>
               <Field.Select
                 name="tipo"
-                label="Tipo de Imóvel"
+                label="Tipo de Produto"
                 required
-                helperText="Classificação do imóvel"
+                helperText="Classificação do produto"
               >
                 <MenuItem value="apartamento">Apartamento</MenuItem>
                 <MenuItem value="casa">Casa</MenuItem>
@@ -84,7 +85,7 @@ export function BasicInfoStep() {
                 placeholder="Ex: 85"
                 formatThousands
                 required
-                helperText="Área útil do imóvel"
+                helperText="Área útil do produto"
               />
             </Grid>
             <Grid item xs={12} md={3}>
@@ -118,7 +119,7 @@ export function BasicInfoStep() {
               <Field.Select
                 name="status"
                 label="Status"
-                helperText="Situação atual do imóvel"
+                helperText="Situação atual do produto"
               >
                 <MenuItem value="available">Disponível</MenuItem>
                 <MenuItem value="sold">Vendido</MenuItem>
@@ -152,7 +153,7 @@ export function BasicInfoStep() {
               <Field.Switch
                 name="mobiliado"
                 label="Mobiliado"
-                helperText="Imóvel vem com móveis"
+                helperText="Produto vem com móveis"
               />
             </Grid>
           </Grid>

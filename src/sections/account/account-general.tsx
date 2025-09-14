@@ -1,4 +1,3 @@
-import { z as zod } from 'src/lib/zod-config';
 import { useForm } from 'react-hook-form';
 import { useMemo, useState, useEffect } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -12,6 +11,7 @@ import LoadingButton from '@mui/lab/LoadingButton';
 
 import { fData } from 'src/utils/format-number';
 
+import { z as zod } from 'src/lib/zod-config';
 import axios, { endpoints } from 'src/lib/axios';
 
 import { toast } from 'src/components/snackbar';

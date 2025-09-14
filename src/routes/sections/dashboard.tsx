@@ -87,12 +87,7 @@ const PropertyListPage = lazy(() => import('src/pages/dashboard/property/list'))
 
 const PropertyCreatePage = lazy(() => import('src/pages/dashboard/property/new'));
 const PropertyEditPage = lazy(() => import('src/pages/dashboard/property/edit'));
-// Terrenos
-const TerrenosListPage = lazy(() => import('src/pages/dashboard/terrenos/list'));
-const TerrenosNewPage = lazy(() => import('src/pages/dashboard/terrenos/new'));
-const TerrenosNewSimplePage = lazy(() => import('src/pages/dashboard/terrenos/new-simple'));
-const TerrenosDetailsPage = lazy(() => import('src/pages/dashboard/terrenos/details'));
-const TerrenosEditPage = lazy(() => import('src/pages/dashboard/terrenos/edit'));
+
 
 // Lead
 const LeadListPage = lazy(() => import('src/pages/dashboard/lead/list'));
@@ -125,12 +120,7 @@ const TourListPage = lazy(() => import('src/pages/dashboard/tour/list'));
 const TourCreatePage = lazy(() => import('src/pages/dashboard/tour/new'));
 const TourEditPage = lazy(() => import('src/pages/dashboard/tour/edit'));
 // Empreendimentos
-const EmpreendimentosListPage = lazy(() => import('src/pages/dashboard/empreendimentos/list'));
-const EmpreendimentosCreatePage = lazy(() => import('src/pages/dashboard/empreendimentos/new'));
-const EmpreendimentosDetailsPage = lazy(
-  () => import('src/pages/dashboard/empreendimentos/details')
-);
-const EmpreendimentosEditPage = lazy(() => import('src/pages/dashboard/empreendimentos/edit'));
+
 // Real Estate
 const RealEstateListPage = lazy(() => import('src/pages/dashboard/real-estate/list'));
 const RealEstateCreatePage = lazy(() => import('src/pages/dashboard/real-estate/new'));
@@ -236,17 +226,7 @@ export const dashboardRoutes: RouteObject[] = [
           { path: ':id/edit', element: <PropertyEditPage /> },
         ],
       },
-      {
-        path: 'terrenos',
-        children: [
-          { index: true, element: <TerrenosListPage /> },
-          { path: 'list', element: <TerrenosListPage /> },
-          { path: 'new', element: <TerrenosNewPage /> },
-          { path: 'new-simple', element: <TerrenosNewSimplePage /> },
-          { path: ':id', element: <TerrenosDetailsPage /> },
-          { path: ':id/edit', element: <TerrenosEditPage /> },
-        ],
-      },
+
       {
         path: 'wallet',
         children: [
@@ -370,16 +350,7 @@ export const dashboardRoutes: RouteObject[] = [
           { path: ':id/edit', element: <TourEditPage /> },
         ],
       },
-      {
-        path: 'empreendimentos',
-        children: [
-          { index: true, element: <EmpreendimentosListPage /> },
-          { path: 'list', element: <EmpreendimentosListPage /> },
-          { path: 'new', element: <EmpreendimentosCreatePage /> },
-          { path: ':id', element: <EmpreendimentosDetailsPage /> },
-          { path: ':id/edit', element: <EmpreendimentosEditPage /> },
-        ],
-      },
+
       {
         path: 'real-estate',
         children: [

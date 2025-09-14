@@ -17,10 +17,7 @@ const PricingPage = lazy(() => import('src/pages/pricing'));
 const PaymentPage = lazy(() => import('src/pages/payment'));
 const ComingSoonPage = lazy(() => import('src/pages/coming-soon'));
 const MaintenancePage = lazy(() => import('src/pages/maintenance'));
-// Product
-const ProductListPage = lazy(() => import('src/pages/product/list'));
-const ProductDetailsPage = lazy(() => import('src/pages/product/details'));
-const ProductCheckoutPage = lazy(() => import('src/pages/product/checkout'));
+
 // Blog
 const PostListPage = lazy(() => import('src/pages/post/list'));
 const PostDetailsPage = lazy(() => import('src/pages/post/details'));
@@ -52,15 +49,7 @@ export const mainRoutes: RouteObject[] = [
           { path: 'contact-us', element: <ContactPage /> },
           { path: 'faqs', element: <FaqsPage /> },
           { path: 'blank', element: <BlankPage /> },
-          {
-            path: 'product',
-            children: [
-              { index: true, element: <ProductListPage /> },
-              { path: 'list', element: <ProductListPage /> },
-              { path: ':id', element: <ProductDetailsPage /> },
-              { path: 'checkout', element: <ProductCheckoutPage /> },
-            ],
-          },
+
           {
             path: 'post',
             children: [

@@ -1,6 +1,5 @@
 import type { IPropertyItem } from 'src/types/property';
 
-import { z as zod } from 'src/lib/zod-config';
 import { useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { useBoolean } from 'minimal-shared/hooks';
@@ -17,6 +16,7 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
+import { z as zod } from 'src/lib/zod-config';
 import { createProperty, updateProperty } from 'src/actions/property';
 import { PROPERTY_TYPE_OPTIONS, PROPERTY_STATUS_OPTIONS } from 'src/_mock/_property';
 
@@ -377,7 +377,7 @@ export function PropertyNewEditForm({ currentProperty }: Props) {
 
               <Grid container spacing={2}>
                 <Grid size={{ xs: 12, md: 4 }}>
-                  <Field.Select name="tipo" label="Tipo de Imóvel">
+                  <Field.Select name="tipo" label="Tipo de Produto">
                     {PROPERTY_TYPE_OPTIONS.map((option) => (
                       <MenuItem key={option.value} value={option.value}>
                         {option.label}
@@ -452,7 +452,35 @@ export function PropertyNewEditForm({ currentProperty }: Props) {
                   <Field.Text name="localizacao.cidade" label="Cidade" placeholder="São Paulo" />
                 </Grid>
                 <Grid size={{ xs: 12, md: 4 }}>
-                  <Field.Text name="localizacao.estado" label="Estado" placeholder="SP" />
+                  <Field.Select name="localizacao.estado" label="Estado">
+                    <MenuItem value="AC">Acre</MenuItem>
+                    <MenuItem value="AL">Alagoas</MenuItem>
+                    <MenuItem value="AP">Amapá</MenuItem>
+                    <MenuItem value="AM">Amazonas</MenuItem>
+                    <MenuItem value="BA">Bahia</MenuItem>
+                    <MenuItem value="CE">Ceará</MenuItem>
+                    <MenuItem value="DF">Distrito Federal</MenuItem>
+                    <MenuItem value="ES">Espírito Santo</MenuItem>
+                    <MenuItem value="GO">Goiás</MenuItem>
+                    <MenuItem value="MA">Maranhão</MenuItem>
+                    <MenuItem value="MT">Mato Grosso</MenuItem>
+                    <MenuItem value="MS">Mato Grosso do Sul</MenuItem>
+                    <MenuItem value="MG">Minas Gerais</MenuItem>
+                    <MenuItem value="PA">Pará</MenuItem>
+                    <MenuItem value="PB">Paraíba</MenuItem>
+                    <MenuItem value="PR">Paraná</MenuItem>
+                    <MenuItem value="PE">Pernambuco</MenuItem>
+                    <MenuItem value="PI">Piauí</MenuItem>
+                    <MenuItem value="RJ">Rio de Janeiro</MenuItem>
+                    <MenuItem value="RN">Rio Grande do Norte</MenuItem>
+                    <MenuItem value="RS">Rio Grande do Sul</MenuItem>
+                    <MenuItem value="RO">Rondônia</MenuItem>
+                    <MenuItem value="RR">Roraima</MenuItem>
+                    <MenuItem value="SC">Santa Catarina</MenuItem>
+                    <MenuItem value="SP">São Paulo</MenuItem>
+                    <MenuItem value="SE">Sergipe</MenuItem>
+                    <MenuItem value="TO">Tocantins</MenuItem>
+                  </Field.Select>
                 </Grid>
                 <Grid size={{ xs: 12, md: 4 }}>
                   <Field.Text name="localizacao.cep" label="CEP" placeholder="01234-567" />

@@ -1,0 +1,1 @@
+import{j as t,H as i}from"./index-D82XrlGq.js";import{R as r}from"./relatorios-list-view-Dj0hZSEs.js";import"./dashboard-stats-card-H28sBg4H.js";import"./Card-Bw-3A9ev.js";import"./Grid-CxfBC3qm.js";function l(){return t.jsxs(t.Fragment,{children:[t.jsx(i,{children:t.jsx("title",{children:" Relatórios v4 - Lista"})}),t.jsx(r,{})]})}export{l as default};

@@ -767,7 +767,38 @@ export const PropertyModel = mongoose.model<IProperty>('Property', propertySchem
 
 // Função utilitária para converter documento para interface Property
 export const toProperty = (propertyDoc: IProperty): Property => {
-  const addressFormatted = `${propertyDoc.address.street}, ${propertyDoc.address.number}${propertyDoc.address.complement ? ', ' + propertyDoc.address.complement : ''}, ${propertyDoc.address.neighborhood}, ${propertyDoc.address.city} - ${propertyDoc.address.state}, ${propertyDoc.address.zipCode}`;
+  // Formatar endereço apenas com campos que têm valores válidos
+  const addressParts = [];
+  
+  if (propertyDoc.address.street && propertyDoc.address.street.trim()) {
+    addressParts.push(propertyDoc.address.street.trim());
+  }
+  
+  if (propertyDoc.address.number && propertyDoc.address.number.trim() && propertyDoc.address.number.trim() !== 'S/N') {
+    addressParts.push(propertyDoc.address.number.trim());
+  }
+  
+  if (propertyDoc.address.complement && propertyDoc.address.complement.trim()) {
+    addressParts.push(propertyDoc.address.complement.trim());
+  }
+  
+  if (propertyDoc.address.neighborhood && propertyDoc.address.neighborhood.trim() && propertyDoc.address.neighborhood.trim() !== 'Centro') {
+    addressParts.push(propertyDoc.address.neighborhood.trim());
+  }
+  
+  if (propertyDoc.address.city && propertyDoc.address.city.trim() && propertyDoc.address.city.trim() !== 'São Paulo') {
+    addressParts.push(propertyDoc.address.city.trim());
+  }
+  
+  if (propertyDoc.address.state && propertyDoc.address.state.trim() && propertyDoc.address.state.trim() !== 'SP') {
+    addressParts.push(propertyDoc.address.state.trim());
+  }
+  
+  if (propertyDoc.address.zipCode && propertyDoc.address.zipCode.trim()) {
+    addressParts.push(propertyDoc.address.zipCode.trim());
+  }
+  
+  const addressFormatted = addressParts.length > 0 ? addressParts.join(', ') : '';
   
   return {
     id: propertyDoc._id.toString(),

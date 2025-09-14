@@ -29,7 +29,7 @@ export function CarouselArrowBasicButtons({
   disableNext,
   className,
   ...other
-}: CarouselArrowButtonsProps) {
+}: CarouselArrowButtonsProps): JSX.Element {
   return (
     <BasicButtonsRoot
       className={mergeClasses([carouselClasses.arrows.root, className])}
@@ -69,7 +69,7 @@ export function CarouselArrowFloatButtons({
   onClickNext,
   disablePrev,
   disableNext,
-}: CarouselArrowButtonsProps) {
+}: CarouselArrowButtonsProps): JSX.Element {
   const baseStyles = (theme: Theme) => ({
     zIndex: 9,
     top: '50%',
@@ -165,7 +165,7 @@ export function CarouselArrowNumberButtons({
   disableNext,
   selectedIndex,
   ...other
-}: CarouselArrowButtonsProps) {
+}: CarouselArrowButtonsProps): JSX.Element {
   return (
     <NumberButtonsRoot
       className={mergeClasses([carouselClasses.arrows.root, className])}

@@ -57,7 +57,7 @@ export function PropertyTableToolbar({ filters, onResetPage, dateError }: Props)
           fullWidth
           value={state.name}
           onChange={handleFilterName}
-          placeholder="Buscar imóvel..."
+          placeholder="Buscar produto..."
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">

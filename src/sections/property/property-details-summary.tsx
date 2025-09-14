@@ -162,7 +162,7 @@ export function PropertyDetailsSummary({ property, disableActions, ...other }: P
               {agent || 'Matheus Vieira Tavares'}
             </Typography>
             <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-              {'(62) 0 0000-0000'}
+              (62) 0 0000-0000
             </Typography>
           </Box>
           <Button

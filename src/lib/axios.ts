@@ -219,25 +219,32 @@ export const endpoints = {
     latest: '/api/post/latest',
     search: '/api/post/search',
   },
-  product: {
-    list: '/api/product/list',
-    details: '/api/product/details',
-    search: '/api/product/search',
-  },
+
   client: {
     list: '/api/client/list',
     details: '/api/client/details',
     search: '/api/client/search',
   },
   property: {
-    list: '/api/property/list',
-    details: '/api/property/details',
-    search: '/api/property/search',
-    stats: '/api/property/stats',
-    filters: '/api/property/filters',
-    create: '/api/property',
-    update: '/api/property',
-    delete: '/api/property',
+    list: '/api/products',
+    details: '/api/products',
+    search: '/api/products/search',
+    stats: '/api/products/stats',
+    filters: '/api/products/filters',
+    create: '/api/products',
+    update: '/api/products',
+    delete: '/api/products',
+  },
+  // Unified products endpoint (same as property for compatibility)
+  products: {
+    list: '/api/products',
+    details: '/api/products',
+    search: '/api/products/search',
+    stats: '/api/products/stats',
+    filters: '/api/products/filters',
+    create: '/api/products',
+    update: '/api/products',
+    delete: '/api/products',
   },
   user: {
     profile: '/api/user/profile', // Dados do usuário e organização
@@ -250,26 +257,8 @@ export const endpoints = {
     update: '/api/real-estate',
     delete: '/api/real-estate',
   },
-  terreno: {
-    list: '/api/terreno/list',
-    details: '/api/terreno',
-    search: '/api/terreno/search',
-    stats: '/api/terreno/stats',
-    filters: '/api/terreno/filters',
-    create: '/api/terreno',
-    update: '/api/terreno',
-    delete: '/api/terreno',
-  },
-  empreendimento: {
-    list: '/api/empreendimento/list',
-    details: '/api/empreendimento',
-    search: '/api/empreendimento/search',
-    stats: '/api/empreendimento/stats',
-    filters: '/api/empreendimento/filters',
-    create: '/api/empreendimento',
-    update: '/api/empreendimento',
-    delete: '/api/empreendimento',
-  },
+
+
   corretor: {
     list: '/api/corretor/list',
     details: '/api/corretor',

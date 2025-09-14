@@ -1,7 +1,9 @@
+import type { TextFieldProps } from '@mui/material/TextField';
+
 import { forwardRef } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
-import TextField, { TextFieldProps } from '@mui/material/TextField';
+import TextField from '@mui/material/TextField';
 
 // ----------------------------------------------------------------------
 
@@ -23,9 +25,7 @@ const applyCepMask = (value: string): string => {
 };
 
 // Função para remover máscara (manter apenas números)
-const removeCepMask = (value: string): string => {
-  return value.replace(/\D/g, '');
-};
+const removeCepMask = (value: string): string => value.replace(/\D/g, '');
 
 export const RHFCepField = forwardRef<HTMLDivElement, RHFCepFieldProps>(
   ({ name, helperText, type, ...other }, ref) => {

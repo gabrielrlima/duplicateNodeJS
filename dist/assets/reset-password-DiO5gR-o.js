@@ -1,0 +1,1 @@
+import{j as e,H as t,C as s}from"./index-D82XrlGq.js";import{c as r}from"./centered-update-password-view-LMQpo01w.js";import"./schema-helper-BcHhi0sG.js";const a={title:`Reset password | Layout centered - ${s.appName}`};function m(){return e.jsxs(e.Fragment,{children:[e.jsx(t,{children:e.jsxs("title",{children:[" ",a.title]})}),e.jsx(r,{})]})}export{m as default};

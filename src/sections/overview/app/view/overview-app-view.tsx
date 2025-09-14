@@ -3,8 +3,6 @@ import Grid from '@mui/material/Grid2';
 import { DashboardContent } from 'src/layouts/dashboard';
 import { _mock, _salesFunnelData, _ecommerceBestSalesman } from 'src/_mock';
 import { useGetProperties, useGetPropertyStats } from 'src/actions/property';
-import { useGetTerrenos } from 'src/actions/terreno';
-import { useGetEmpreendimentos } from 'src/actions/empreendimento';
 
 import { AppTopRelated } from '../app-top-related';
 import { LatestSales } from '../../e-commerce/latest-sales';
@@ -26,13 +24,8 @@ export function OverviewAppView() {
   // Buscar estatísticas reais
   const { propertyStats, propertyStatsLoading, propertyStatsError } = useGetPropertyStats();
   const { properties } = useGetProperties();
-  const { terrenos } = useGetTerrenos();
-  const { empreendimentos } = useGetEmpreendimentos();
-
-  // Calcular total de produtos cadastrados usando os dados disponíveis
-  const totalProdutos = (propertyStats?.totalProperties || 0) + 
-                       (terrenos?.length || 0) + 
-                       (empreendimentos?.length || 0);
+  // Calcular total de imóveis cadastrados usando os dados disponíveis
+  const totalImoveis = propertyStats?.totalProperties || 0;
 
   const _ecommerceSalesOverview = ['Total de vendas', 'Total de alugueis'].map((label, index) => ({
     label,
@@ -130,9 +123,9 @@ export function OverviewAppView() {
 
         <Grid size={{ xs: 12, md: 3 }}>
           <EcommerceWidgetSummary
-            title="Produtos cadastrados"
+            title="Imóveis cadastrados"
             percent={2.6}
-            total={totalProdutos}
+            total={totalImoveis}
             time="últimos 7 dias"
             // chart={{
             //   categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug'],

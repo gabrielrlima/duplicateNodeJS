@@ -90,7 +90,7 @@ export type IPropertyItem = {
   finalidade: string; // venda, aluguel, venda_aluguel
   createdAt: IDateValue;
   updatedAt: IDateValue;
-  localizacao: IPropertyLocalizacao;
+  localizacao: IPropertyLocalizacao | string;
   proprietario: IPropertyProprietario;
   caracteristicas: IPropertyCaracteristicas;
   valores: IPropertyValores;

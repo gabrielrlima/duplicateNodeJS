@@ -2,9 +2,7 @@ import { Router } from 'express';
 import { authRoutes } from './authRoutes';
 import userRoutes from './userRoutes';
 import realEstateRoutes from './realEstateRoutes';
-import propertyRoutes from './propertyRoutes';
-import terrenoRoutes from './terrenoRoutes';
-import empreendimentoRoutes from './empreendimentoRoutes';
+import productRoutes from './productRoutes';
 import brokerRoutes from './brokerRoutes';
 import brokerGroupRoutes from './brokerGroupRoutes';
 import commissionRoutes from './commissionRoutes';
@@ -68,9 +66,26 @@ router.get('/info', (req: Request, res: Response) => {
 router.use('/auth', authRoutes);
 router.use('/users', userRoutes);
 router.use('/real-estate', realEstateRoutes);
-router.use('/property', propertyRoutes);
-router.use('/terreno', terrenoRoutes);
-router.use('/empreendimento', empreendimentoRoutes);
+router.use('/products', productRoutes);
+
+// Rotas de compatibilidade (redirecionam para /products)
+router.use('/property', (req, res, next) => {
+  req.url = req.url.replace('/property', '/products');
+  req.query.type = 'imovel';
+  productRoutes(req, res, next);
+});
+
+router.use('/terreno', (req, res, next) => {
+  req.url = req.url.replace('/terreno', '/products');
+  req.query.type = 'terreno';
+  productRoutes(req, res, next);
+});
+
+router.use('/empreendimento', (req, res, next) => {
+  req.url = req.url.replace('/empreendimento', '/products');
+  req.query.type = 'empreendimento';
+  productRoutes(req, res, next);
+});
 router.use('/corretor', brokerRoutes);
 router.use('/grupo', brokerGroupRoutes);
 router.use('/comissao', commissionRoutes);

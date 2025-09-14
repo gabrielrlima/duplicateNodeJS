@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Auth Status</title>
+</head>
+<body>
+    <h1>Test Authentication Status</h1>
+    <div id="results"></div>
+    
+    <script>
+        // Verificar se há token no sessionStorage
+        const token = sessionStorage.getItem('sanctum_access_token');
+        const results = document.getElementById('results');
+        
+        if (token) {
+            results.innerHTML += `<p>✅ Token encontrado: ${token.substring(0, 20)}...</p>`;
+            
+            // Testar requisição autenticada
+            fetch('http://localhost:5000/api/auth/me', {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => {
+                results.innerHTML += `<p>Status da requisição /auth/me: ${response.status}</p>`;
+                return response.json();
+            })
+            .then(data => {
+                results.innerHTML += `<p>Dados do usuário: ${JSON.stringify(data, null, 2)}</p>`;
+            })
+            .catch(error => {
+                results.innerHTML += `<p>❌ Erro na requisição: ${error.message}</p>`;
+            });
+            
+        } else {
+            results.innerHTML += '<p>❌ Nenhum token encontrado no sessionStorage</p>';
+            results.innerHTML += '<p>Você precisa fazer login primeiro</p>';
+        }
+        
+        // Verificar localStorage também
+        const localToken = localStorage.getItem('sanctum_access_token');
+        if (localToken) {
+            results.innerHTML += `<p>📦 Token no localStorage: ${localToken.substring(0, 20)}...</p>`;
+        }
+    </script>
+</body>
+</html>

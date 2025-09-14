@@ -4,26 +4,26 @@ import { DashboardContent } from 'src/layouts/dashboard';
 
 import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 
-import { PropertyWizardForm } from '../property-wizard-form';
+import { PropertySingleForm } from '../property-single-form';
 
 // ----------------------------------------------------------------------
 
 export function PropertyCreateView() {
-  console.log('🏠🏠🏠 PropertyCreateView component loaded - CREATE VIEW ATIVO 🏠🏠🏠');
+  console.log('🏠🏠🏠 PropertyCreateView component loaded - SINGLE FORM ATIVO 🏠🏠🏠');
   
   return (
     <DashboardContent>
       <CustomBreadcrumbs
-        heading="Novo imóvel"
+        heading="Novo produto"
         links={[
           { name: 'Dashboard', href: paths.dashboard.root },
-          { name: 'Imóveis', href: paths.dashboard.property.root },
-          { name: 'Novo imóvel' },
+          { name: 'Produtos', href: paths.dashboard.property.root },
+          { name: 'Novo produto' },
         ]}
         sx={{ mb: { xs: 3, md: 5 } }}
       />
 
-      <PropertyWizardForm />
+      <PropertySingleForm />
     </DashboardContent>
   );
 }

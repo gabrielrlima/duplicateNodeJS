@@ -15,7 +15,7 @@ interface PropertyIdentificationFormProps {
 // Schema de validação seguindo a nova arquitetura
 const identificationSchema = zod.object({
   // Seção 1.1 - Identificação Básica
-  type: zod.string().min(1, 'Tipo de imóvel é obrigatório'),
+  type: zod.string().min(1, 'Tipo de produto é obrigatório'),
   purpose: zod.string().min(1, 'Finalidade é obrigatória'),
   condition: zod.string().min(1, 'Condição é obrigatória'),
   status: zod.string().min(1, 'Status é obrigatório'),
@@ -245,7 +245,7 @@ const PropertyIdentificationForm: React.FC<PropertyIdentificationFormProps> = ({
                 <Grid2 size={{ xs: 12, sm: 6, md: 3 }}>
                   <Field.Select
                     name="type"
-                    label="Tipo de Imóvel"
+                    label="Tipo de Produto"
                     error={!!getFieldError('type')}
                     helperText={getFieldError('type')}
                   >
@@ -526,7 +526,7 @@ const PropertyIdentificationForm: React.FC<PropertyIdentificationFormProps> = ({
                               ? 'Terreno'
                               : 'Chácara/Sítio'
                     } para ${values.purpose === 'sale' ? 'venda' : values.purpose === 'rent' ? 'aluguel' : 'venda e aluguel'}`
-                  : 'Selecione o tipo e finalidade do imóvel'}
+                  : 'Selecione o tipo e finalidade do produto'}
                 {values.location?.city &&
                   values.location?.neighborhood &&
                   ` • ${values.location.neighborhood}, ${values.location.city}/${values.location.state}`}

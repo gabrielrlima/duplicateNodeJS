@@ -25,7 +25,7 @@ import { useRealEstateContext } from 'src/contexts/real-estate-context';
 
 import { toast } from 'src/components/snackbar';
 import { Iconify } from 'src/components/iconify';
-import { Form, RHFTextField, Field } from 'src/components/hook-form';
+import { Form, Field, RHFTextField } from 'src/components/hook-form';
 
 interface LogoUploadProps {
   logoFile: File | null;

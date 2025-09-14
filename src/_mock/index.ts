@@ -23,9 +23,9 @@ export * from './_vendas';
 
 export * from './_invoice';
 
-export * from './_product';
 
-export * from './_terreno';
+
+
 
 export * from './_property';
 
@@ -38,5 +38,3 @@ export * from './_cobranca';
 export * from './_comissoes';
 
 export * from './_relatorios';
-
-export * from './_empreendimento';

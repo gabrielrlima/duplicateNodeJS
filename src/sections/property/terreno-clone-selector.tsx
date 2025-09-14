@@ -17,8 +17,6 @@ import {
 
 import { fCurrency } from 'src/utils/format-number';
 
-import { _terrenos } from 'src/_mock/_terreno';
-
 import { Iconify } from 'src/components/iconify';
 
 // ----------------------------------------------------------------------
@@ -32,7 +30,7 @@ type Props = {
 export function TerrenoCloneSelector({ open, onClose, onSelect }: Props) {
   const [selectedTerreno, setSelectedTerreno] = useState<any | null>(null);
 
-  const availableTerrenos = _terrenos.filter((terreno) => terreno.status === 'available');
+  const availableTerrenos: any[] = [];
 
   const handleSelect = (terreno: any) => {
     setSelectedTerreno(terreno);

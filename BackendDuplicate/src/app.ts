@@ -30,7 +30,14 @@ app.use((req, res, next) => {
   next();
 });
 
-// 2. Middleware de parsing (CRÍTICO para POST)
+// 2. CORS (CRÍTICO para permitir o frontend acessar a API via navegador)
+app.use(corsMiddleware);
+
+// 3. Middleware de segurança e logs (opcionais, úteis para debug)
+app.use(helmetMiddleware);
+app.use(requestLogger);
+
+// 4. Middleware de parsing (CRÍTICO para POST)
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 

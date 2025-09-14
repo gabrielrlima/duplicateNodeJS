@@ -1,13 +1,9 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
 import { z as zod } from 'zod';
-import { useBoolean } from 'minimal-shared/hooks';
-import { useRouter } from 'src/routes/hooks';
-import { paths } from 'src/routes/paths';
-import { useRealEstateContext } from 'src/contexts/real-estate-context';
-import { createProperty } from 'src/actions/property';
 import { toast } from 'sonner';
+import { useForm } from 'react-hook-form';
+import { useBoolean } from 'minimal-shared/hooks';
+import { zodResolver } from '@hookform/resolvers/zod';
+import React, { useState, useEffect, useCallback } from 'react';
 
 import {
   Box,
@@ -16,15 +12,22 @@ import {
   Typography,
   LinearProgress,
 } from '@mui/material';
+
+import { paths } from 'src/routes/paths';
+import { useRouter } from 'src/routes/hooks';
+
+import { createProperty } from 'src/actions/property';
+import { useRealEstateContext } from 'src/contexts/real-estate-context';
+
 import { Form } from 'src/components/hook-form';
 
+import { OwnerStep } from './steps/owner-step';
+import { ImagesStep } from './steps/images-step';
+import { ReviewStep } from './steps/review-step';
+import { LocationStep } from './steps/location-step';
 // Importar os componentes de cada etapa
 import { BasicInfoStep } from './steps/basic-info-step';
-import { LocationStep } from './steps/location-step';
 import { CharacteristicsStep } from './steps/characteristics-step';
-import { ImagesStep } from './steps/images-step';
-import { OwnerStep } from './steps/owner-step';
-import { ReviewStep } from './steps/review-step';
 
 // Schema completo do formulário
 const PropertyWizardSchema = zod.object({

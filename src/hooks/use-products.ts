@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 
-// TODO: Descomentar quando conectar com o backend
-// import axios, { endpoints } from 'src/lib/axios';
+import axios, { endpoints } from 'src/lib/axios';
+import { useRealEstateContext } from 'src/contexts/real-estate-context';
 
 // ----------------------------------------------------------------------
 // TIPOS
@@ -10,6 +10,18 @@ import { useState, useEffect } from 'react';
 export interface ProductItem {
   id: string;
   nome: string;
+  name?: string;
+  title?: string;
+  titulo?: string;
+  type?: string;
+  tipo?: string;
+  value?: number;
+  preco?: number;
+  area?: number;
+  address?: any;
+  city?: string;
+  state?: string;
+  neighborhood?: string;
 }
 
 export interface UseProductsReturn {
@@ -27,23 +39,47 @@ export function useProperties(): UseProductsReturn {
   const [products, setProducts] = useState<ProductItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const { currentRealEstate } = useRealEstateContext();
 
   const fetchProperties = async () => {
     try {
       setLoading(true);
       setError(null);
 
-      // TODO: Conectar com endpoint real do backend
-      // const response = await axios.get(endpoints.properties.list);
-      // const data = response.data;
-
-      // Por enquanto, retorna array vazio até o backend estar pronto
-      const data: ProductItem[] = [];
-
-      setProducts(data);
+      console.log('🔍 Buscando produtos...', { currentRealEstate });
+      
+      // Buscar produtos do backend
+      const response = await axios.get(endpoints.property.list, {
+        params: currentRealEstate?.id ? { real_estate_id: currentRealEstate.id } : {}
+      });
+      
+      console.log('📦 Resposta da API:', response.data);
+      
+      const data = response.data?.data || [];
+      
+      // Mapear dados para o formato esperado
+      const mappedData: ProductItem[] = data.map((item: any) => ({
+        id: item.id,
+        nome: item.name || item.title || item.titulo || 'Produto sem nome',
+        name: item.name || item.title || item.titulo,
+        title: item.title || item.titulo,
+        titulo: item.titulo || item.title,
+        type: item.type || item.tipo,
+        tipo: item.tipo || item.type,
+        value: item.value || item.preco,
+        preco: item.preco || item.value,
+        area: item.area,
+        address: item.address,
+        city: item.city,
+        state: item.state,
+        neighborhood: item.neighborhood
+      }));
+      
+      console.log('✅ Produtos mapeados:', mappedData);
+      setProducts(mappedData);
     } catch (err: any) {
-      console.error('Erro ao buscar imóveis:', err);
-      setError(err.message || 'Erro ao carregar imóveis');
+      console.error('❌ Erro ao buscar produtos:', err);
+      setError(err.response?.data?.message || err.message || 'Erro ao carregar produtos');
       setProducts([]);
     } finally {
       setLoading(false);
@@ -63,113 +99,15 @@ export function useProperties(): UseProductsReturn {
 }
 
 // ----------------------------------------------------------------------
-// HOOK PARA BUSCAR TERRENOS
-// ----------------------------------------------------------------------
-
-export function useTerrenos(): UseProductsReturn {
-  const [products, setProducts] = useState<ProductItem[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  const fetchTerrenos = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-
-      // TODO: Conectar com endpoint real do backend
-      // const response = await axios.get(endpoints.terrenos.list);
-      // const data = response.data.map((terreno: any) => ({
-      //   id: terreno.id,
-      //   nome: terreno.titulo,
-      // }));
-
-      // Por enquanto, retorna array vazio até o backend estar pronto
-      const data: ProductItem[] = [];
-
-      setProducts(data);
-    } catch (err: any) {
-      console.error('Erro ao buscar terrenos:', err);
-      setError(err.message || 'Erro ao carregar terrenos');
-      setProducts([]);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchTerrenos();
-  }, []);
-
-  return {
-    products,
-    loading,
-    error,
-    refetch: fetchTerrenos,
-  };
-}
-
-// ----------------------------------------------------------------------
-// HOOK PARA BUSCAR EMPREENDIMENTOS
-// ----------------------------------------------------------------------
-
-export function useEmpreendimentos(): UseProductsReturn {
-  const [products, setProducts] = useState<ProductItem[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  const fetchEmpreendimentos = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-
-      // TODO: Conectar com endpoint real do backend
-      // const response = await axios.get(endpoints.empreendimentos.list);
-      // const data = response.data.map((empreendimento: any) => ({
-      //   id: empreendimento.id,
-      //   nome: empreendimento.titulo,
-      // }));
-
-      // Por enquanto, retorna array vazio até o backend estar pronto
-      const data: ProductItem[] = [];
-
-      setProducts(data);
-    } catch (err: any) {
-      console.error('Erro ao buscar empreendimentos:', err);
-      setError(err.message || 'Erro ao carregar empreendimentos');
-      setProducts([]);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchEmpreendimentos();
-  }, []);
-
-  return {
-    products,
-    loading,
-    error,
-    refetch: fetchEmpreendimentos,
-  };
-}
-
-// ----------------------------------------------------------------------
 // HOOK COMBINADO PARA BUSCAR PRODUTOS POR CATEGORIA
 // ----------------------------------------------------------------------
 
 export function useProductsByCategory(categoria: string): UseProductsReturn {
   const propertiesResult = useProperties();
-  const terrenosResult = useTerrenos();
-  const empreendimentosResult = useEmpreendimentos();
 
   switch (categoria) {
     case 'imovel':
       return propertiesResult;
-    case 'terreno':
-      return terrenosResult;
-    case 'empreendimento':
-      return empreendimentosResult;
     default:
       return {
         products: [],

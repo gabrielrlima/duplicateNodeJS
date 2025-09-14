@@ -1,17 +1,17 @@
 import { useFormContext } from 'react-hook-form';
-import { Card, Stack, Typography, Grid, Box, Chip, Divider } from '@mui/material';
+
+import { Box, Card, Grid, Chip, Stack, Divider, Typography } from '@mui/material';
+
 import { Iconify } from 'src/components/iconify';
 
 export function ReviewStep() {
   const { watch } = useFormContext();
   const formData = watch();
 
-  const formatCurrency = (value: number) => {
-    return new Intl.NumberFormat('pt-BR', {
+  const formatCurrency = (value: number) => new Intl.NumberFormat('pt-BR', {
       style: 'currency',
       currency: 'BRL',
     }).format(value || 0);
-  };
 
   const getStatusLabel = (status: string) => {
     const statusMap = {

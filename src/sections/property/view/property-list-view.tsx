@@ -48,19 +48,19 @@ import { PropertyTableFiltersResult } from '../property-table-filters-result';
 
 // ----------------------------------------------------------------------
 
-const STATUS_OPTIONS = [
-  { value: 'all', label: 'Todos' },
-  { value: 'available', label: 'Disponível' },
-  { value: 'reserved', label: 'Reservado' },
-  { value: 'sold', label: 'Vendido' },
-  { value: 'inactive', label: 'Inativo' },
+// Removido STATUS_OPTIONS - mantendo apenas filtros por tipo
+
+const TYPE_OPTIONS = [
+  { value: 'all', label: 'Todos os tipos', color: 'default' },
+  { value: 'imovel', label: 'Imóveis', color: 'primary' },
+  { value: 'terreno', label: 'Terrenos', color: 'success' },
+  { value: 'empreendimento', label: 'Empreendimentos', color: 'warning' },
 ];
 
 const TABLE_HEAD: TableHeadCellProps[] = [
-  { id: 'titulo', label: 'Imóvel' },
-  { id: 'corretor', label: 'Corretor', width: 140 },
-  { id: 'area', label: 'Área (m²)', width: 120, align: 'center' },
-  { id: 'preco', label: 'Preço', width: 140 },
+  { id: 'titulo', label: 'Título' },
+  { id: 'localizacao', label: 'Localização', width: 180 },
+  { id: 'tipo', label: 'Tipo', width: 120 },
   { id: 'status', label: 'Status', width: 110 },
   { id: '', width: 88 },
 ];
@@ -87,7 +87,7 @@ export function PropertyListView() {
         precoM2: property.pricePerSquareMeter || (property.value && property.totalArea ? Math.round(property.value / property.totalArea) : 0),
         finalidade: property.purpose || 'venda',
         status: property.status || 'available',
-        tipo: property.type || 'apartamento',
+        tipo: property.tipo || property.type || 'imovel',
         condicao: property.condition || 'usado',
         quartos: property.bedrooms || 0,
         banheiros: property.bathrooms || 0,
@@ -100,23 +100,7 @@ export function PropertyListView() {
         posicaoSolar: property.sunPosition || '',
         createdAt: property.createdAt,
         updatedAt: property.updatedAt,
-        localizacao: {
-          endereco: typeof property.address === 'string' ? property.address : 
-                   typeof property.address === 'object' && property.address ? 
-                   `${property.address.street || ''} ${property.address.number || ''}`.trim() || 'Endereço não informado' :
-                   'Endereço não informado',
-          complemento: property.address?.complement || '',
-          bairro: property.neighborhood || property.address?.neighborhood || 'Bairro não informado',
-          cidade: property.city || property.address?.city || 'Cidade não informada',
-          estado: property.state || property.address?.state || 'Estado não informado',
-          cep: property.cep || property.zipCode || property.address?.zipCode || 'CEP não informado',
-          andar: property.address?.floor || '',
-          nomeEdificio: property.address?.buildingName || '',
-          coordenadas: property.latitude && property.longitude ? {
-            lat: property.latitude,
-            lng: property.longitude
-          } : undefined
-        },
+        localizacao: property.address || 'Localização não informada',
         proprietario: {
           id: property.ownerId || '',
           nome: property.owner?.name || 'Proprietário não informado',
@@ -164,6 +148,8 @@ export function PropertyListView() {
     startDate: null,
     endDate: null,
   });
+  
+  const [typeFilter, setTypeFilter] = useState('all');
   const { state: currentFilters, setState: updateFilters } = filters;
 
   const dateError = fIsAfter(currentFilters.startDate, currentFilters.endDate);
@@ -172,6 +158,7 @@ export function PropertyListView() {
     inputData: tableData,
     comparator: getComparator(table.order, table.orderBy),
     filters: currentFilters,
+    typeFilter,
     dateError,
   });
 
@@ -179,7 +166,7 @@ export function PropertyListView() {
 
   const canReset =
     !!currentFilters.name ||
-    currentFilters.status !== 'all' ||
+    typeFilter !== 'all' ||
     (!!currentFilters.startDate && !!currentFilters.endDate);
 
   // Verificar se não há properties na API (dados vazios)
@@ -224,12 +211,14 @@ export function PropertyListView() {
     [tableData]
   );
 
-  const handleFilterStatus = useCallback(
+  // Removido handleFilterStatus - mantendo apenas filtros por tipo
+  
+  const handleFilterType = useCallback(
     (event: React.SyntheticEvent, newValue: string) => {
       table.onResetPage();
-      updateFilters({ status: newValue });
+      setTypeFilter(newValue);
     },
-    [updateFilters, table]
+    [table]
   );
 
   // Loading state
@@ -244,16 +233,16 @@ export function PropertyListView() {
         <Box
           sx={{
             display: 'flex',
-            flexDirection: 'column',
             alignItems: 'center',
             justifyContent: 'center',
+            flexDirection: 'column',
             minHeight: 400,
             textAlign: 'center',
           }}
         >
           <Iconify icon="eva:alert-triangle-fill" sx={{ width: 64, height: 64, color: 'error.main', mb: 2 }} />
           <Typography variant="h6" sx={{ mb: 1 }}>
-            Erro ao carregar imóveis
+            Erro ao carregar produtos
           </Typography>
           <Typography variant="body2" color="text.secondary">
             {error.message || 'Ocorreu um erro inesperado'}
@@ -274,11 +263,11 @@ export function PropertyListView() {
           sx={{ mb: { xs: 3, md: 5 } }}
         >
           <CustomBreadcrumbs
-            heading="Todos os imóveis"
+            heading="Todos os produtos"
             links={[
               { name: 'Dashboard', href: paths.dashboard.root },
-              { name: 'Imóveis', href: paths.dashboard.property.root },
-              { name: 'Lista de imóveis' },
+              { name: 'Produtos', href: paths.dashboard.property.root },
+              { name: 'Lista de produtos' },
             ]}
             sx={{
               '.MuiTypography-h4': {
@@ -295,14 +284,14 @@ export function PropertyListView() {
               width: { xs: '100%', sm: 'auto' },
             }}
           >
-            Novo imóvel
+            Novo produto
           </Button>
         </Stack>
 
         <Card>
           <Tabs
-            value={currentFilters.status}
-            onChange={handleFilterStatus}
+            value={typeFilter}
+            onChange={handleFilterType}
             sx={[
               (theme) => ({
                 px: 2.5,
@@ -310,7 +299,7 @@ export function PropertyListView() {
               }),
             ]}
           >
-            {STATUS_OPTIONS.map((tab) => (
+            {TYPE_OPTIONS.map((tab) => (
               <Tab
                 key={tab.value}
                 iconPosition="end"
@@ -319,20 +308,14 @@ export function PropertyListView() {
                 icon={
                   <Label
                     variant={
-                      ((tab.value === 'all' || tab.value === currentFilters.status) && 'filled') ||
+                      ((tab.value === 'all' || tab.value === typeFilter) && 'filled') ||
                       'soft'
                     }
-                    color={
-                      (tab.value === 'available' && 'success') ||
-                      (tab.value === 'reserved' && 'warning') ||
-                      (tab.value === 'sold' && 'info') ||
-                      (tab.value === 'inactive' && 'error') ||
-                      'default'
-                    }
+                    color={(tab.color as any) || 'default'}
                   >
                     {tab.value === 'all'
                       ? tableData.length
-                      : tableData.filter((property) => property.status === tab.value).length}
+                      : tableData.filter((property) => property.tipo === tab.value).length}
                   </Label>
                 }
               />
@@ -389,7 +372,7 @@ export function PropertyListView() {
 
                   <TableNoData 
                     notFound={notFound} 
-                    title={noProperties ? "Nenhum imóvel registrado" : "Nenhum resultado encontrado"}
+                    title={noProperties ? "Nenhum produto registrado" : "Nenhum resultado encontrado"}
                   />
                 </TableBody>
               </Table>
@@ -417,11 +400,12 @@ type ApplyFilterProps = {
   dateError: boolean;
   inputData: IPropertyItem[];
   filters: IPropertyTableFilters;
+  typeFilter: string;
   comparator: (a: any, b: any) => number;
 };
 
-function applyFilter({ inputData, comparator, filters, dateError }: ApplyFilterProps) {
-  const { status, name, startDate, endDate } = filters;
+function applyFilter({ inputData, comparator, filters, typeFilter, dateError }: ApplyFilterProps) {
+  const { name, startDate, endDate } = filters;
 
   const stabilizedThis = inputData.map((el, index) => [el, index] as const);
 
@@ -440,9 +424,9 @@ function applyFilter({ inputData, comparator, filters, dateError }: ApplyFilterP
       )
     );
   }
-
-  if (status !== 'all') {
-    inputData = inputData.filter((property) => property.status === status);
+  
+  if (typeFilter !== 'all') {
+    inputData = inputData.filter((property) => property.tipo === typeFilter);
   }
 
   if (!dateError) {

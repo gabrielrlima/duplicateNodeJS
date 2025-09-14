@@ -1,9 +1,6 @@
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
-import { useDropzone } from 'react-dropzone';
-import { useState, useCallback } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useRouter } from 'src/routes/hooks';
 
 import { LoadingButton } from '@mui/lab';
 import {
@@ -11,16 +8,17 @@ import {
   Card,
   Stack,
   Button,
-  IconButton,
   Typography,
 } from '@mui/material';
 
 import { paths } from 'src/routes/paths';
+import { useRouter } from 'src/routes/hooks';
+
 import { useRealEstate } from 'src/hooks/use-real-estate';
+
 import { useRealEstateContext } from 'src/contexts/real-estate-context';
 
 import { toast } from 'src/components/snackbar';
-import { Iconify } from 'src/components/iconify';
 import { Form, Field } from 'src/components/hook-form';
 
 // ----------------------------------------------------------------------

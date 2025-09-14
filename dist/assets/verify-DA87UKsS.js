@@ -1,1 +1,0 @@
-import{j as e,H as t,C as r}from"./index-cNRh_qft.js";import{b as a}from"./centered-update-password-view-BExeRtQE.js";import"./schema-helper-D18en8Wv.js";const i={title:`Verify | Layout centered - ${r.appName}`};function o(){return e.jsxs(e.Fragment,{children:[e.jsx(t,{children:e.jsxs("title",{children:[" ",i.title]})}),e.jsx(a,{})]})}export{o as default};
